@@ -32,6 +32,12 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        /* Light theme variables */
+        [data-theme="light"] {
+            --dark: #f8fafc;
+            --light: #1e293b;
+        }
+        
         /* Reset dan base styles */
         * {
             margin: 0;
@@ -54,6 +60,13 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Light theme styles */
+        [data-theme="light"] {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #1e293b;
         }
         
         /* Glassmorphism Effect */
@@ -63,6 +76,12 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .glass {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(30, 41, 59, 0.1);
         }
         
         .glass-light {
@@ -70,6 +89,12 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .glass-light {
+            background: rgba(30, 41, 59, 0.05);
+            border: 1px solid rgba(30, 41, 59, 0.1);
         }
         
         /* Gradient Text */
@@ -111,6 +136,12 @@
             30% { opacity: 1; }
         }
         
+        @keyframes notificationPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
         .float-animation {
             animation: float 3s ease-in-out infinite;
         }
@@ -135,6 +166,10 @@
             animation: typing 1.4s infinite;
         }
         
+        .notification-pulse {
+            animation: notificationPulse 2s infinite;
+        }
+        
         /* Auth Container */
         .auth-container {
             display: flex;
@@ -154,6 +189,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .auth-card {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(30, 41, 59, 0.1);
         }
         
         /* Sidebar Styles - Mobile First */
@@ -292,6 +333,11 @@
             flex-shrink: 0;
             padding: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s;
+        }
+        
+        [data-theme="light"] .chat-input-area {
+            border-top: 1px solid rgba(30, 41, 59, 0.1);
         }
         
         .chat-bubble {
@@ -320,6 +366,12 @@
             background: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 1rem 1rem 1rem 0.25rem;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .chat-bubble.ai {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
         
         /* Typing Indicator */
@@ -330,6 +382,12 @@
             background: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 1rem;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .typing-indicator {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
         
         .typing-indicator span {
@@ -451,6 +509,12 @@
             overflow-x: auto;
             font-family: 'Fira Code', 'Courier New', monospace;
             font-size: 0.875rem;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        [data-theme="light"] .code-editor {
+            background: #f8fafc;
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
         
         /* Loading Animation */
@@ -532,25 +596,9 @@
             font-weight: bold;
         }
         
-        /* Mobile Menu Button */
+        /* Mobile Menu Button - HIDDEN */
         .mobile-menu-btn {
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 60;
-            width: 3rem;
-            height: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-            transition: var(--transition);
-        }
-        
-        @media (min-width: 768px) {
-            .mobile-menu-btn {
-                display: none;
-            }
+            display: none;
         }
         
         /* Overlay */
@@ -591,7 +639,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             transform: translateY(100px);
             opacity: 0;
-            transition: transform 0.3s, opacity 0.3s;
+            transition: transform 0.3s, opacity 0.3;
         }
         
         .toast.show {
@@ -626,6 +674,12 @@
             transition: var(--transition);
         }
         
+        [data-theme="light"] .form-input {
+            background: rgba(248, 250, 252, 0.6);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+            color: #1e293b;
+        }
+        
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
@@ -638,6 +692,11 @@
             font-size: 0.875rem;
             font-weight: 500;
             color: #e2e8f0;
+            transition: color 0.3s;
+        }
+        
+        [data-theme="light"] .form-label {
+            color: #1e293b;
         }
         
         /* Responsive Grid */
@@ -887,6 +946,226 @@
             color: #f59e0b;
             margin-right: 0.5rem;
         }
+        
+        /* Profile Picture */
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Subscription Plans */
+        .plan-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        [data-theme="light"] .plan-card {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+        }
+        
+        .plan-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .plan-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        /* Notification Panel */
+        .notification-panel {
+            position: fixed;
+            top: var(--header-height);
+            right: 1rem;
+            width: 320px;
+            max-height: 400px;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 100;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(-20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        [data-theme="light"] .notification-panel {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+        }
+        
+        .notification-panel.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .notification-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        [data-theme="light"] .notification-header {
+            border-bottom: 1px solid rgba(30, 41, 59, 0.1);
+        }
+        
+        .notification-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .notification-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .notification-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .notification-item.unread {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .notification-text {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.25rem;
+        }
+        
+        [data-theme="light"] .notification-text {
+            color: rgba(30, 41, 59, 0.7);
+        }
+        
+        .notification-time {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="light"] .notification-time {
+            color: rgba(30, 41, 59, 0.5);
+        }
+        
+        /* Settings Form */
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="light"] .settings-title {
+            border-bottom: 1px solid rgba(30, 41, 59, 0.1);
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+        
+        .settings-label {
+            font-weight: 500;
+        }
+        
+        .settings-control {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
     </style>
 </head>
 <body>
@@ -1022,7 +1301,7 @@
     
     <!-- Main App (Hidden by default) -->
     <div id="main-app" class="hidden">
-        <!-- Mobile Menu Button -->
+        <!-- Mobile Menu Button - HIDDEN -->
         <button class="mobile-menu-btn glass touch-target" onclick="toggleSidebar()" aria-label="Toggle menu">
             <i class="fas fa-bars text-white text-xl"></i>
         </button>
@@ -1082,15 +1361,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="sidebar-item flex items-center" data-section="settings">
-                            <i class="fas fa-cog w-5 mr-3 flex-shrink-0"></i>
-                            <span class="truncate">Settings</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="#" class="sidebar-item flex items-center" data-section="profile">
                             <i class="fas fa-user w-5 mr-3 flex-shrink-0"></i>
                             <span class="truncate">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="settings">
+                            <i class="fas fa-cog w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Settings</span>
                         </a>
                     </li>
                     <li>
@@ -1126,22 +1405,49 @@
                     <h2 id="section-title" class="text-responsive-xl font-semibold">Dashboard</h2>
                     <div class="ml-3 ai-badge">
                         <i class="fas fa-microchip"></i>
-                        <span>ERNIE Bot</span>
+                        <span>Powered by Gemini</span>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <button class="relative touch-target p-2 text-gray-400 hover:text-white transition rounded-lg" aria-label="Notifications">
+                    <button class="relative touch-target p-2 text-gray-400 hover:text-white transition rounded-lg notification-pulse" aria-label="Notifications" onclick="toggleNotificationPanel()">
                         <i class="fas fa-bell text-xl"></i>
                         <span class="notification-badge">3</span>
                     </button>
-                    <button class="touch-target p-2 text-gray-400 hover:text-white transition rounded-lg" aria-label="Toggle theme">
-                        <i class="fas fa-moon text-xl"></i>
+                    <button class="touch-target p-2 text-gray-400 hover:text-white transition rounded-lg" aria-label="Toggle theme" onclick="toggleTheme()">
+                        <i class="fas fa-moon text-xl" id="theme-icon"></i>
                     </button>
-                    <button class="btn-primary text-white text-responsive-sm">
+                    <button class="btn-primary text-white text-responsive-sm" onclick="showUpgradeModal()">
                         Upgrade
                     </button>
                 </div>
             </header>
+            
+            <!-- Notification Panel -->
+            <div id="notification-panel" class="notification-panel">
+                <div class="notification-header">
+                    <span>Notifikasi</span>
+                    <button onclick="toggleNotificationPanel()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="notification-list">
+                    <div class="notification-item unread">
+                        <div class="notification-title">Pembaruan Aplikasi</div>
+                        <div class="notification-text">Versi 2.0 sekarang tersedia dengan fitur AI yang lebih baik!</div>
+                        <div class="notification-time">2 jam yang lalu</div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-title">Promo Spesial</div>
+                        <div class="notification-text">Dapatkan diskon 20% untuk paket Pro bulan ini!</div>
+                        <div class="notification-time">1 hari yang lalu</div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-title">Tips Harian</div>
+                        <div class="notification-text">Coba fitur Playground untuk membuat konten yang menarik!</div>
+                        <div class="notification-time">3 hari yang lalu</div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Content Area -->
             <div class="content-area">
@@ -1155,7 +1461,7 @@
                                 </div>
                                 <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+12%</span>
                             </div>
-                            <div class="text-responsive-2xl font-bold mb-1">24</div>
+                            <div class="text-responsive-2xl font-bold mb-1" id="total-chats">0</div>
                             <div class="text-gray-400 text-responsive-sm">Total Chats</div>
                         </div>
                         
@@ -1166,7 +1472,7 @@
                                 </div>
                                 <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+8%</span>
                             </div>
-                            <div class="text-responsive-2xl font-bold mb-1">142</div>
+                            <div class="text-responsive-2xl font-bold mb-1" id="total-images">0</div>
                             <div class="text-gray-400 text-responsive-sm">Images Generated</div>
                         </div>
                         
@@ -1177,7 +1483,7 @@
                                 </div>
                                 <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+15%</span>
                             </div>
-                            <div class="text-responsive-2xl font-bold mb-1">37</div>
+                            <div class="text-responsive-2xl font-bold mb-1" id="total-code">0</div>
                             <div class="text-gray-400 text-responsive-sm">Code Snippets</div>
                         </div>
                         
@@ -1188,7 +1494,7 @@
                                 </div>
                                 <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+5%</span>
                             </div>
-                            <div class="text-responsive-2xl font-bold mb-1">8</div>
+                            <div class="text-responsive-2xl font-bold mb-1" id="total-chatbots">0</div>
                             <div class="text-gray-400 text-responsive-sm">Chatbots Created</div>
                         </div>
                     </div>
@@ -1196,36 +1502,11 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-responsive">
                         <div class="lg:col-span-2 glass p-responsive rounded-xl">
                             <h3 class="text-responsive-lg font-semibold mb-4">Recent Activity</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
-                                    <div class="p-2 rounded-lg bg-blue-500/20 text-blue-400 mr-3 flex-shrink-0">
-                                        <i class="fas fa-comment-dots"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="font-medium truncate">New chat with ERNIE Bot</div>
-                                        <div class="text-responsive-sm text-gray-400">2 hours ago</div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
-                                </div>
-                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
-                                    <div class="p-2 rounded-lg bg-green-500/20 text-green-400 mr-3 flex-shrink-0">
-                                        <i class="fas fa-image"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="font-medium truncate">Generated image with ERNIE Bot</div>
-                                        <div class="text-responsive-sm text-gray-400">Yesterday</div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
-                                </div>
-                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
-                                    <div class="p-2 rounded-lg bg-yellow-500/20 text-yellow-400 mr-3 flex-shrink-0">
-                                        <i class="fas fa-code"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="font-medium truncate">Created React component</div>
-                                        <div class="text-responsive-sm text-gray-400">2 days ago</div>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
+                            <div id="recent-activity" class="space-y-4">
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-inbox text-4xl mb-3"></i>
+                                    <p>Belum ada aktivitas terbaru</p>
+                                    <p class="text-sm mt-2">Mulai gunakan fitur AI Nexus untuk melihat aktivitas Anda di sini</p>
                                 </div>
                             </div>
                         </div>
@@ -1333,9 +1614,7 @@
                                         <div class="mb-4">
                                             <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Select AI Model</label>
                                             <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
-                                                <option>Chat Z AI</option>
                                                 <option>Gemini Pro</option>
-                                                <option>GPT-4 Turbo</option>
                                             </select>
                                         </div>
                                         
@@ -1392,8 +1671,6 @@
                                             <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Image Model</label>
                                             <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
                                                 <option>Gemini Pro Vision</option>
-                                                <option>DALL-E 3</option>
-                                                <option>Stable Diffusion XL</option>
                                             </select>
                                         </div>
                                         
@@ -1457,9 +1734,6 @@
                                             <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Video Model</label>
                                             <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
                                                 <option>Gemini Pro</option>
-                                                <option>Pika Labs</option>
-                                                <option>Sora</option>
-                                                <option>Stable Video</option>
                                             </select>
                                         </div>
                                         
@@ -1937,6 +2211,193 @@
                     </div>
                 </section>
                 
+                <!-- Profile Section -->
+                <section id="profile-section" class="content-section hidden">
+                    <div class="glass p-responsive rounded-xl">
+                        <div class="flex flex-col items-center mb-8">
+                            <div class="relative mb-6">
+                                <img id="profile-picture" src="https://picsum.photos/seed/user123/200/200.jpg" alt="Profile Picture" class="profile-picture">
+                                <button class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-2 shadow-lg hover:bg-indigo-700 transition">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <h2 class="text-responsive-3xl font-bold gradient-text mb-2" id="profile-name">User Name</h2>
+                            <p class="text-gray-400 text-lg" id="profile-email">user@example.com</p>
+                            <div class="mt-2 ai-badge">
+                                <i class="fas fa-crown"></i>
+                                <span id="user-plan">Basic Plan</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h3 class="text-responsive-xl font-semibold mb-4">Informasi Pribadi</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-user text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Nama Lengkap</div>
+                                            <div class="text-gray-400" id="profile-fullname">User Name</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-envelope text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Email</div>
+                                            <div class="text-gray-400" id="profile-email-info">user@example.com</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-calendar text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Bergabung Sejak</div>
+                                            <div class="text-gray-400" id="profile-joined">January 1, 2023</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-clock text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Terakhir Aktif</div>
+                                            <div class="text-gray-400" id="profile-last-active">Just now</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-responsive-xl font-semibold mb-4">Statistik Penggunaan</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-comments text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Total Chats</div>
+                                            <div class="text-gray-400" id="profile-chats">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-image text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Gambar Dibuat</div>
+                                            <div class="text-gray-400" id="profile-images">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-code text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Kode Dibuat</div>
+                                            <div class="text-gray-400" id="profile-code">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-robot text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Chatbot Dibuat</div>
+                                            <div class="text-gray-400" id="profile-chatbots">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center">
+                            <button onclick="showUpgradeModal()" class="btn-primary">
+                                <i class="fas fa-arrow-up mr-2"></i> Upgrade Plan
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Settings Section -->
+                <section id="settings-section" class="content-section hidden">
+                    <div class="glass p-responsive rounded-xl">
+                        <h2 class="text-responsive-2xl font-bold mb-6">Pengaturan</h2>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Tampilan</h3>
+                            <div class="settings-item">
+                                <div class="settings-label">Mode Gelap</div>
+                                <div class="settings-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="dark-mode-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Notifikasi</h3>
+                            <div class="settings-item">
+                                <div class="settings-label">Notifikasi Email</div>
+                                <div class="settings-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="email-notifications-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-label">Notifikasi Push</div>
+                                <div class="settings-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="push-notifications-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-label">Notifikasi Update</div>
+                                <div class="settings-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="update-notifications-toggle" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Bahasa</h3>
+                            <div class="settings-item">
+                                <div class="settings-label">Bahasa Aplikasi</div>
+                                <div class="settings-control">
+                                    <select class="p-2 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                        <option>Bahasa Indonesia</option>
+                                        <option>English</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Keamanan</h3>
+                            <div class="settings-item">
+                                <div class="settings-label">Ubah Password</div>
+                                <div class="settings-control">
+                                    <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                        Ubah
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-label">Autentikasi Dua Faktor</div>
+                                <div class="settings-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="2fa-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end mt-8">
+                            <button onclick="saveSettings()" class="btn-primary">
+                                Simpan Pengaturan
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
                 <!-- About Section - Pembuat AI -->
                 <section id="about-section" class="content-section hidden">
                     <div class="glass p-responsive rounded-xl">
@@ -1995,7 +2456,7 @@
                         <div class="border-t border-gray-700 pt-6">
                             <h3 class="text-responsive-xl font-semibold mb-4">Kontak</h3>
                             <div class="flex flex-wrap gap-4 justify-center">
-                                <a href="#" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
+                                <a href="https://www.instagram.com/alippwoyyy/" target="_blank" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
                                     <i class="fab fa-instagram text-pink-500 mr-2"></i>
                                     <span>Instagram</span>
                                 </a>
@@ -2019,1464 +2480,2031 @@
         </main>
     </div>
     
+    <!-- Upgrade Modal -->
+    <div id="upgrade-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="glass rounded-xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold gradient-text">Pilih Paket Anda</h2>
+                <button onclick="closeUpgradeModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Basic Plan -->
+                <div class="plan-card">
+                    <h3 class="text-xl font-bold mb-2">Basic</h3>
+                    <div class="text-3xl font-bold mb-4">Gratis</div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>10 Chat per hari</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>5 Image generation per hari</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>1 Chatbot</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Support dasar</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition" id="basic-plan-btn">
+                        Paket Saat Ini
+                    </button>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="plan-card featured">
+                    <div class="plan-badge">POPULER</div>
+                    <h3 class="text-xl font-bold mb-2">Pro</h3>
+                    <div class="text-3xl font-bold mb-4">Rp 50.000<span class="text-base font-normal">/bulan</span></div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Chat tak terbatas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>100 Image generation per hari</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>10 Chatbot</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Priority support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Akses fitur premium</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 btn-primary text-white" onclick="selectPlan('pro')">
+                        Pilih Pro
+                    </button>
+                </div>
+                
+                <!-- Ultra Plan -->
+                <div class="plan-card">
+                    <h3 class="text-xl font-bold mb-2">Ultra</h3>
+                    <div class="text-3xl font-bold mb-4">Rp 100.000<span class="text-base font-normal">/bulan</span></div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Chat tak terbatas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Image generation tak terbatas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Chatbot tak terbatas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>24/7 Priority support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Semua fitur premium</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>API access</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 btn-primary text-white" onclick="selectPlan('ultra')">
+                        Pilih Ultra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Toast Notification Container -->
     <div id="toast-container"></div>
-
     <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyAC13TY_4XA2ez9djITE3njaQDviijc53o", // <--- PENTING: Ganti di sini!
+        apiKey: "AIzaSyAC13TY_4XA2ez9djITE3njaQDviijc53o",
         authDomain: "nexusai-d2044.firebaseapp.com",
         databaseURL: "https://nexusai-d2044-default-rtdb.firebaseio.com",
         projectId: "nexusai-d2044",
         storageBucket: "nexusai-d2044.appspot.com",
-        messagingSenderId: "1710408617", // <--- PENTING: Ganti di sini!
-        appId: "1:1710408617:web:a5aef853dca9c2771d3ab8", // <--- PENTING: Ganti di sini!
-        measurementId: "G-7SP841GBR7" // Hapus komentar dan ganti jika Anda menggunakan Google Analytics for Firebase
+        messagingSenderId: "1710408617",
+        appId: "1:1710408617:web:a5aef853dca9c2771d3ab8",
+        measurementId: "G-7SP841GBR7"
     };
-
+    
     try {
         firebase.initializeApp(firebaseConfig);
         console.log("Aplikasi Firebase berhasil diinisialisasi.");
     } catch (e) {
         console.log("Aplikasi Firebase sudah diinisialisasi atau mengalami kesalahan:", e);
     }
-
+    
     const auth = firebase.auth();
     const db = firebase.firestore();
     
-    // Konfigurasi API (API_CONFIG Anda yang sudah ada untuk layanan lain)
+    // Konfigurasi API
     const API_CONFIG = {
         GEMINI_API_KEY: 'AIzaSyC0nU5kudyQJpdxpSlLGIbwRgZ24jqyvGY',
-        GEMINI_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/',
-        CHAT_Z_AI_API_KEY: 'your-chat-z-ai-api-key', // <--- Ganti placeholder ini
-        CHAT_Z_AI_BASE_URL: 'https://chat.z.ai/api/v1',
-        DIALOGFLOW_API_KEY: 'your-dialogflow-api-key', // <--- Ganti placeholder ini
-        DIALOGFLOW_PROJECT_ID: 'your-dialogflow-project-id', // <--- Ganti placeholder ini
-        DIALOGFLOW_BASE_URL: 'https://dialogflow.googleapis.com/v2/projects/'
+        GEMINI_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
     };
-
-    // Variabel Global (variabel global Anda yang sudah ada)
+    
+    // Variabel Global
     let currentSection = 'dashboard';
     let currentChat = [];
     let isGenerating = false;
     let abortController = null;
     let currentUser = null;
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check viewport size
-            checkViewportSize();
-            
-            // Initialize event listeners
-            initializeEventListeners();
-            
-            // Check authentication status
-            checkAuthStatus();
-        });
-        
-        // Check authentication status
-function checkAuthStatus() {
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            // User is signed in
-            currentUser = user;
-            
-            // Check if email is verified
-            if (!user.emailVerified) {
-                showToast('Please verify your email address.', 'warning');
-                document.getElementById('verification-notice').classList.remove('hidden');
-            }
-            
-            // Get user data from Firestore
-            try {
-                const doc = await db.collection('users').doc(user.uid).get();
-                
-                if (doc.exists) {
-                    // User data exists, show main app
-                    const userData = doc.data();
-                    showMainApp(userData);
-                } else {
-                    // User data doesn't exist, create it
-                    const userData = {
-                        name: user.displayName || 'User',
-                        email: user.email,
-                        createdAt: new Date().toISOString(),
-                        lastLogin: new Date().toISOString(),
-                        preferences: {
-                            language: 'id',
-                            theme: 'dark',
-                            notifications: {
-                                email: true,
-                                push: true
-                            }
-                        },
-                        stats: {
-                            chats: 0,
-                            images: 0,
-                            codeSnippets: 0,
-                            chatbots: 0
-                        }
-                    };
-                    
-                    // Create user document
-                    await db.collection('users').doc(user.uid).set(userData);
-                    showMainApp(userData);
-                }
-            } catch (error) {
-                console.error("Error getting user document:", error);
-                showToast('Error loading user profile', 'error');
-            }
-        } else {
-            // User is signed out
-            currentUser = null;
-            showAuthPage();
-        }
-    });
-}
-        
-        // Show authentication page
-        function showAuthPage() {
-            document.getElementById('auth-container').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
-        }
-        
-        // Show main app
-        function showMainApp(user) {
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            
-            // Update user info in the UI
-            document.getElementById('user-name').textContent = user.name;
-            document.getElementById('user-email').textContent = user.email;
-            document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
-            
-            // Tampilkan dashboard dengan benar
-            setTimeout(() => {
-                showSection('dashboard');
-            }, 100);
-        }
+    let userPlan = 'basic';
+    
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check viewport size
+        checkViewportSize();
         
         // Initialize event listeners
-function initializeEventListeners() {
-    // ... kode yang sudah ada ...
-    
-    // Auth form event listeners
-    document.getElementById('login-form-element').addEventListener('submit', handleLogin);
-    document.getElementById('register-form-element').addEventListener('submit', handleRegister);
-    document.getElementById('reset-password-form-element').addEventListener('submit', handleResetPassword);
-    
-    // Link event listeners
-    document.querySelector('a[onclick="showRegister()"]').addEventListener('click', function(e) {
-        e.preventDefault();
-        showRegister();
+        initializeEventListeners();
+        
+        // Check authentication status
+        checkAuthStatus();
+        
+        // Load theme preference
+        loadThemePreference();
     });
     
-    document.querySelector('a[onclick="showLogin()"]').addEventListener('click', function(e) {
-        e.preventDefault();
-        showLogin();
-    });
-    
-    document.querySelector('a[onclick="showResetPassword()"]').addEventListener('click', function(e) {
-        e.preventDefault();
-        showResetPassword();
-    });
-    
-    document.querySelector('a[onclick="resendVerificationEmail()"]').addEventListener('click', function(e) {
-        e.preventDefault();
-        resendVerificationEmail();
-    });
-    
-    // ... kode yang sudah ada ...
-}
-            // Window resize handler
-            let resizeTimeout;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(function() {
-                    checkViewportSize();
-                }, 250);
-            });
-            
-            // Touch events for better mobile experience
-            document.addEventListener('touchstart', function() {}, { passive: true });
-            document.addEventListener('touchmove', function() {}, { passive: true });
-            
-            // Prevent zoom on double tap
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = Date.now();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
+    // Check authentication status
+    function checkAuthStatus() {
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                
+                // Check if email is verified
+                if (!user.emailVerified) {
+                    showToast('Please verify your email address.', 'warning');
+                    document.getElementById('verification-notice').classList.remove('hidden');
                 }
-                lastTouchEnd = now;
-            }, false);
-            
-            // Sidebar navigation
-            const sidebarItems = document.querySelectorAll('.sidebar-item');
-            sidebarItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('data-section');
-                    if (sectionId) {
-                        showSection(sectionId, this);
+                
+                // Get user data from Firestore
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    
+                    if (doc.exists) {
+                        // User data exists, show main app
+                        const userData = doc.data();
+                        userPlan = userData.plan || 'basic';
+                        showMainApp(userData);
+                        loadUserStats();
+                        loadRecentActivity();
+                    } else {
+                        // User data doesn't exist, create it
+                        const userData = {
+                            name: user.displayName || 'User',
+                            email: user.email,
+                            plan: 'basic',
+                            createdAt: new Date().toISOString(),
+                            lastLogin: new Date().toISOString(),
+                            preferences: {
+                                language: 'id',
+                                theme: 'dark',
+                                notifications: {
+                                    email: true,
+                                    push: true,
+                                    updates: true
+                                }
+                            },
+                            stats: {
+                                chats: 0,
+                                images: 0,
+                                codeSnippets: 0,
+                                chatbots: 0
+                            }
+                        };
+                        
+                        // Create user document
+                        await db.collection('users').doc(user.uid).set(userData);
+                        showMainApp(userData);
+                        loadUserStats();
                     }
+                } catch (error) {
+                    console.error("Error getting user document:", error);
+                    showToast('Error loading user profile', 'error');
+                }
+            } else {
+                // User is signed out
+                currentUser = null;
+                showAuthPage();
+            }
+        });
+    }
+    
+    // Load user stats
+    async function loadUserStats() {
+        if (!currentUser) return;
+        
+        try {
+            const doc = await db.collection('users').doc(currentUser.uid).get();
+            if (doc.exists) {
+                const userData = doc.data();
+                const stats = userData.stats || {
+                    chats: 0,
+                    images: 0,
+                    codeSnippets: 0,
+                    chatbots: 0
+                };
+                
+                // Update dashboard stats
+                document.getElementById('total-chats').textContent = stats.chats;
+                document.getElementById('total-images').textContent = stats.images;
+                document.getElementById('total-code').textContent = stats.codeSnippets;
+                document.getElementById('total-chatbots').textContent = stats.chatbots;
+                
+                // Update profile stats
+                document.getElementById('profile-chats').textContent = stats.chats;
+                document.getElementById('profile-images').textContent = stats.images;
+                document.getElementById('profile-code').textContent = stats.codeSnippets;
+                document.getElementById('profile-chatbots').textContent = stats.chatbots;
+                
+                // Update user plan
+                userPlan = userData.plan || 'basic';
+                document.getElementById('user-plan').textContent = userPlan.charAt(0).toUpperCase() + userPlan.slice(1) + ' Plan';
+                
+                // Update profile info
+                document.getElementById('profile-name').textContent = userData.name;
+                document.getElementById('profile-fullname').textContent = userData.name;
+                document.getElementById('profile-email').textContent = userData.email;
+                document.getElementById('profile-email-info').textContent = userData.email;
+                document.getElementById('profile-joined').textContent = new Date(userData.createdAt).toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                 });
-            });
-        
-        // Check viewport size and adjust accordingly
-        function checkViewportSize() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            
-            // Adjust for small screens
-            if (width < 640) {
-                document.body.classList.add('mobile');
-            } else {
-                document.body.classList.remove('mobile');
-            }
-            
-            // Adjust for landscape orientation on mobile
-            if (width > height && width < 1024) {
-                document.body.classList.add('landscape');
-            } else {
-                document.body.classList.remove('landscape');
-            }
-        }
-        
-        // Toggle sidebar
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.overlay');
-            
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-            
-            // Prevent body scroll when sidebar is open on mobile
-            if (window.innerWidth < 768) {
-                if (sidebar.classList.contains('open')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
+                document.getElementById('profile-last-active').textContent = new Date(userData.lastLogin).toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Update profile picture
+                if (userData.profilePicture) {
+                    document.getElementById('profile-picture').src = userData.profilePicture;
                 }
             }
+        } catch (error) {
+            console.error("Error loading user stats:", error);
         }
+    }
+    
+    // Load recent activity
+    async function loadRecentActivity() {
+        if (!currentUser) return;
         
-        // Show section
-        function showSection(sectionId, element) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(section => {
-                section.classList.add('hidden');
-            });
+        try {
+            const snapshot = await db.collection('users')
+                .doc(currentUser.uid)
+                .collection('activities')
+                .orderBy('timestamp', 'desc')
+                .limit(5)
+                .get();
             
-            // Show selected section
-            const selectedSection = document.getElementById(sectionId + '-section');
-            if (!selectedSection) {
-                console.error(`Section with ID ${sectionId}-section not found`);
+            const activitiesContainer = document.getElementById('recent-activity');
+            
+            if (snapshot.empty) {
+                activitiesContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-inbox text-4xl mb-3"></i>
+                        <p>Belum ada aktivitas terbaru</p>
+                        <p class="text-sm mt-2">Mulai gunakan fitur AI Nexus untuk melihat aktivitas Anda di sini</p>
+                    </div>
+                `;
                 return;
             }
-            selectedSection.classList.remove('hidden');
             
-            // Add fade-in animation
-            selectedSection.classList.add('fade-in');
-            
-            // Update section title
-            const titles = {
-                'dashboard': 'Dashboard',
-                'chat': 'Chat AI',
-                'playground': 'AI Playground',
-                'builder': 'Builder',
-                'chatbot': 'Chatbot Builder',
-                'settings': 'Settings',
-                'profile': 'Profile',
-                'about': 'Tentang Pembuat'
-            };
-            const sectionTitle = document.getElementById('section-title');
-            if (sectionTitle && titles[sectionId]) {
-                sectionTitle.textContent = titles[sectionId];
-            }
-            
-            // Update active sidebar item
-            const sidebarItems = document.querySelectorAll('.sidebar-item');
-            sidebarItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            if (element) {
-                element.classList.add('active');
-            } else {
-                // If no element is provided, find the sidebar item that matches the sectionId
-                const matchingItem = Array.from(sidebarItems).find(item => 
-                    item.getAttribute('data-section') === sectionId
-                );
-                if (matchingItem) {
-                    matchingItem.classList.add('active');
-                }
-            }
-            
-            currentSection = sectionId;
-            
-            // Close mobile menu
-            if (window.innerWidth < 768) {
-                toggleSidebar();
-            }
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Switch tab for playground
-        function switchTab(tabName) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.remove('hidden');
-            
-            // Update active tab styling
-            const tabButtons = document.querySelectorAll('#playground-section .border-b button');
-            tabButtons.forEach(button => {
-                button.classList.remove('tab-active');
-                button.classList.add('text-gray-400');
-            });
-            event.target.classList.add('tab-active');
-            event.target.classList.remove('text-gray-400');
-        }
-        
-        // Switch tab for builder
-        function switchBuilderTab(tabName) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.builder-tab-content');
-            tabs.forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.remove('hidden');
-            
-            // Update active tab styling
-            const tabButtons = document.querySelectorAll('#builder-section .border-b button');
-            tabButtons.forEach(button => {
-                button.classList.remove('tab-active');
-                button.classList.add('text-gray-400');
-            });
-            event.target.classList.add('tab-active');
-            event.target.classList.remove('text-gray-400');
-        }
-        
-        // Quick action from dashboard
-        function quickAction(action) {
-            switch(action) {
-                case 'chat':
-                    showSection('chat');
-                    newChat();
-                    break;
-                case 'image':
-                    showSection('playground');
-                    // Need to wait for section to be visible
-                    setTimeout(() => switchTab('image'), 100);
-                    break;
-                case 'video':
-                    showSection('playground');
-                    setTimeout(() => switchTab('video'), 100);
-                    break;
-                case 'chatbot':
-                    showSection('chatbot');
-                    break;
-            }
-        }
-        
-        // New chat
-        function newChat() {
-            currentChat = [];
-            const messagesContainer = document.getElementById('chat-messages');
-            if (messagesContainer) {
-                messagesContainer.innerHTML = '';
-            }
-            
-            const chatTitle = document.getElementById('chat-title');
-            if (chatTitle) {
-                chatTitle.textContent = 'New Chat';
-            }
-            
-            // Focus on input after a short delay
-            setTimeout(() => {
-                const input = document.getElementById('chat-input');
-                if (input) {
-                    input.focus();
-                    // Scroll to bottom on mobile
-                    if (window.innerWidth < 768) {
-                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-            }, 100);
-        }
-        
-        // Handle chat keypress
-        function handleChatKeypress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-        
-        // Scroll to bottom of chat
-        function scrollToBottom() {
-            const messagesContainer = document.getElementById('chat-messages');
-            if (messagesContainer) {
-                setTimeout(() => {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 100);
-            }
-        }
-        
-        // Add message to chat
-        function addMessageToChat(role, content) {
-            const messagesContainer = document.getElementById('chat-messages');
-            if (!messagesContainer) return;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${role === 'user' ? 'justify-end' : ''} slide-in`;
-            
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            messageDiv.innerHTML = `
-                <div class="chat-bubble ${role}">
-                    <p>${content}</p>
-                    <div class="text-xs ${role === 'user' ? 'text-indigo-200' : 'text-gray-400'} mt-2 ${role === 'user' ? 'text-right' : ''}">${time}</div>
-                </div>
-            `;
-            
-            messagesContainer.appendChild(messageDiv);
-            
-            // Save to current chat
-            currentChat.push({ role, content, time });
-        }
-        
-        // Show typing indicator
-        function showTypingIndicator() {
-            const messagesContainer = document.getElementById('chat-messages');
-            if (!messagesContainer) return;
-            
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typing-indicator';
-            typingDiv.className = 'flex slide-in';
-            typingDiv.innerHTML = `
-                <div class="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            `;
-            messagesContainer.appendChild(typingDiv);
-        }
-        
-        // Remove typing indicator
-        function removeTypingIndicator() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-        
-        // Toast notification
-        function showToast(message, type = 'info') {
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            
-            // Add to container
-            const container = document.getElementById('toast-container');
-            container.appendChild(toast);
-            
-            // Animate in
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
-        }
-        
-        // Handle orientation change
-        window.addEventListener('orientationchange', function() {
-            // Give it a moment to adjust
-            setTimeout(() => {
-                checkViewportSize();
+            let activitiesHTML = '';
+            snapshot.forEach(doc => {
+                const activity = doc.data();
+                const timeAgo = getTimeAgo(activity.timestamp.toDate());
                 
-                // Adjust chat interface if needed
-                if (currentSection === 'chat') {
-                    scrollToBottom();
+                let icon = '';
+                let iconBg = '';
+                
+                switch (activity.type) {
+                    case 'chat':
+                        icon = 'fa-comment-dots';
+                        iconBg = 'bg-blue-500/20 text-blue-400';
+                        break;
+                    case 'image':
+                        icon = 'fa-image';
+                        iconBg = 'bg-green-500/20 text-green-400';
+                        break;
+                    case 'code':
+                        icon = 'fa-code';
+                        iconBg = 'bg-yellow-500/20 text-yellow-400';
+                        break;
+                    case 'chatbot':
+                        icon = 'fa-robot';
+                        iconBg = 'bg-purple-500/20 text-purple-400';
+                        break;
+                    default:
+                        icon = 'fa-circle';
+                        iconBg = 'bg-gray-500/20 text-gray-400';
                 }
-            }, 100);
-        });
-        
-        // Handle visibility change (when app comes to foreground)
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                // App is now visible, refresh any data if needed
-                console.log('App is now visible');
-            }
-        });
-        
-        // Add swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-        document.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-        document.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-        
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
+                
+                activitiesHTML += `
+                    <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
+                        <div class="p-2 rounded-lg ${iconBg} mr-3 flex-shrink-0">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-medium truncate">${activity.title}</div>
+                            <div class="text-responsive-sm text-gray-400">${timeAgo}</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
+                    </div>
+                `;
+            });
             
-            // Swipe right to open sidebar
-            if (diff < -swipeThreshold && window.innerWidth < 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (!sidebar.classList.contains('open')) {
-                    toggleSidebar();
+            activitiesContainer.innerHTML = activitiesHTML;
+        } catch (error) {
+            console.error("Error loading recent activity:", error);
+        }
+    }
+    
+    // Get time ago string
+    function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        
+        let interval = seconds / 31536000;
+        if (interval > 1) {
+            return Math.floor(interval) + " tahun yang lalu";
+        }
+        
+        interval = seconds / 2592000;
+        if (interval > 1) {
+            return Math.floor(interval) + " bulan yang lalu";
+        }
+        
+        interval = seconds / 86400;
+        if (interval > 1) {
+            return Math.floor(interval) + " hari yang lalu";
+        }
+        
+        interval = seconds / 3600;
+        if (interval > 1) {
+            return Math.floor(interval) + " jam yang lalu";
+        }
+        
+        interval = seconds / 60;
+        if (interval > 1) {
+            return Math.floor(interval) + " menit yang lalu";
+        }
+        
+        return "Baru saja";
+    }
+    
+    // Add user activity
+    async function addActivity(type, title) {
+        if (!currentUser) return;
+        
+        try {
+            await db.collection('users')
+                .doc(currentUser.uid)
+                .collection('activities')
+                .add({
+                    type: type,
+                    title: title,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            
+            // Update stats
+            const statsRef = db.collection('users').doc(currentUser.uid);
+            const statsDoc = await statsRef.get();
+            
+            if (statsDoc.exists) {
+                const stats = statsDoc.data().stats || {
+                    chats: 0,
+                    images: 0,
+                    codeSnippets: 0,
+                    chatbots: 0
+                };
+                
+                switch (type) {
+                    case 'chat':
+                        stats.chats += 1;
+                        break;
+                    case 'image':
+                        stats.images += 1;
+                        break;
+                    case 'code':
+                        stats.codeSnippets += 1;
+                        break;
+                    case 'chatbot':
+                        stats.chatbots += 1;
+                        break;
                 }
+                
+                await statsRef.update({
+                    stats: stats,
+                    lastLogin: new Date().toISOString()
+                });
+                
+                // Reload stats and activity
+                loadUserStats();
+                loadRecentActivity();
+            }
+        } catch (error) {
+            console.error("Error adding activity:", error);
+        }
+    }
+    
+    // Show authentication page
+    function showAuthPage() {
+        document.getElementById('auth-container').classList.remove('hidden');
+        document.getElementById('main-app').classList.add('hidden');
+    }
+    
+    // Show main app
+    function showMainApp(user) {
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        
+        // Update user info in the UI
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+        
+        // Load user preferences
+        if (user.preferences) {
+            if (user.preferences.theme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').classList.remove('fa-moon');
+                document.getElementById('theme-icon').classList.add('fa-sun');
+                document.getElementById('dark-mode-toggle').checked = false;
             }
             
-            // Swipe left to close sidebar
-            if (diff > swipeThreshold && window.innerWidth < 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('open')) {
-                    toggleSidebar();
-                }
+            if (user.preferences.notifications) {
+                document.getElementById('email-notifications-toggle').checked = user.preferences.notifications.email || false;
+                document.getElementById('push-notifications-toggle').checked = user.preferences.notifications.push || false;
+                document.getElementById('update-notifications-toggle').checked = user.preferences.notifications.updates || false;
             }
         }
         
-        // Handle login
-async function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+        // Tampilkan dashboard dengan benar
+        setTimeout(() => {
+            showSection('dashboard');
+        }, 100);
+    }
     
-    // Show loading indicator
-    document.getElementById('auth-loading').classList.remove('hidden');
-    document.getElementById('login-form').style.opacity = '0.5';
-    document.getElementById('login-form').style.pointerEvents = 'none';
-    
-    try {
-        // Sign in user with email and password
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        const user = userCredential.user;
+    // Initialize event listeners
+    function initializeEventListeners() {
+        // Window resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                checkViewportSize();
+            }, 250);
+        });
         
-        // Check if email is verified
-        if (!user.emailVerified) {
-            showToast('Email Anda belum diverifikasi. Kami telah mengirim ulang tautan verifikasi ke email Anda. Silakan periksa kotak masuk (dan folder spam) Anda.', 'warning');
-            await user.sendEmailVerification();
-            // Tidak perlu signOut di sini, biarkan pengguna tetap login
+        // Touch events for better mobile experience
+        document.addEventListener('touchstart', function() {}, { passive: true });
+        document.addEventListener('touchmove', function() {}, { passive: true });
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Sidebar navigation
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) {
+                    showSection(sectionId, this);
+                }
+            });
+        });
+        
+        // Auth form event listeners
+        document.getElementById('login-form-element').addEventListener('submit', handleLogin);
+        document.getElementById('register-form-element').addEventListener('submit', handleRegister);
+        document.getElementById('reset-password-form-element').addEventListener('submit', handleResetPassword);
+        
+        // Link event listeners
+        document.querySelector('a[onclick="showRegister()"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegister();
+        });
+        
+        document.querySelector('a[onclick="showLogin()"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            showLogin();
+        });
+        
+        document.querySelector('a[onclick="showResetPassword()"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            showResetPassword();
+        });
+        
+        document.querySelector('a[onclick="resendVerificationEmail()"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            resendVerificationEmail();
+        });
+        
+        // Settings event listeners
+        document.getElementById('dark-mode-toggle').addEventListener('change', toggleTheme);
+        document.getElementById('email-notifications-toggle').addEventListener('change', updateNotificationSettings);
+        document.getElementById('push-notifications-toggle').addEventListener('change', updateNotificationSettings);
+        document.getElementById('update-notifications-toggle').addEventListener('change', updateNotificationSettings);
+    }
+    
+    // Check viewport size and adjust accordingly
+    function checkViewportSize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Adjust for small screens
+        if (width < 640) {
+            document.body.classList.add('mobile');
+        } else {
+            document.body.classList.remove('mobile');
+        }
+        
+        // Adjust for landscape orientation on mobile
+        if (width > height && width < 1024) {
+            document.body.classList.add('landscape');
+        } else {
+            document.body.classList.remove('landscape');
+        }
+    }
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.overlay');
+        
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+        
+        // Prevent body scroll when sidebar is open on mobile
+        if (window.innerWidth < 768) {
+            if (sidebar.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+    
+    // Show section
+    function showSection(sectionId, element) {
+        // Hide all sections
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(section => {
+            section.classList.add('hidden');
+        });
+        
+        // Show selected section
+        const selectedSection = document.getElementById(sectionId + '-section');
+        if (!selectedSection) {
+            console.error(`Section with ID ${sectionId}-section not found`);
+            return;
+        }
+        selectedSection.classList.remove('hidden');
+        
+        // Add fade-in animation
+        selectedSection.classList.add('fade-in');
+        
+        // Update section title
+        const titles = {
+            'dashboard': 'Dashboard',
+            'chat': 'Chat AI',
+            'playground': 'AI Playground',
+            'builder': 'Builder',
+            'chatbot': 'Chatbot Builder',
+            'profile': 'Profile',
+            'settings': 'Settings',
+            'about': 'Tentang Pembuat'
+        };
+        const sectionTitle = document.getElementById('section-title');
+        if (sectionTitle && titles[sectionId]) {
+            sectionTitle.textContent = titles[sectionId];
+        }
+        
+        // Update active sidebar item
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        sidebarItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        if (element) {
+            element.classList.add('active');
+        } else {
+            // If no element is provided, find the sidebar item that matches the sectionId
+            const matchingItem = Array.from(sidebarItems).find(item => 
+                item.getAttribute('data-section') === sectionId
+            );
+            if (matchingItem) {
+                matchingItem.classList.add('active');
+            }
+        }
+        
+        currentSection = sectionId;
+        
+        // Close mobile menu
+        if (window.innerWidth < 768) {
+            toggleSidebar();
+        }
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Switch tab for playground
+    function switchTab(tabName) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.classList.add('hidden');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName + '-tab').classList.remove('hidden');
+        
+        // Update active tab styling
+        const tabButtons = document.querySelectorAll('#playground-section .border-b button');
+        tabButtons.forEach(button => {
+            button.classList.remove('tab-active');
+            button.classList.add('text-gray-400');
+        });
+        event.target.classList.add('tab-active');
+        event.target.classList.remove('text-gray-400');
+    }
+    
+    // Switch tab for builder
+    function switchBuilderTab(tabName) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.builder-tab-content');
+        tabs.forEach(tab => {
+            tab.classList.add('hidden');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName + '-tab').classList.remove('hidden');
+        
+        // Update active tab styling
+        const tabButtons = document.querySelectorAll('#builder-section .border-b button');
+        tabButtons.forEach(button => {
+            button.classList.remove('tab-active');
+            button.classList.add('text-gray-400');
+        });
+        event.target.classList.add('tab-active');
+        event.target.classList.remove('text-gray-400');
+    }
+    
+    // Quick action from dashboard
+    function quickAction(action) {
+        switch(action) {
+            case 'chat':
+                showSection('chat');
+                newChat();
+                break;
+            case 'image':
+                showSection('playground');
+                // Need to wait for section to be visible
+                setTimeout(() => switchTab('image'), 100);
+                break;
+            case 'video':
+                showSection('playground');
+                setTimeout(() => switchTab('video'), 100);
+                break;
+            case 'chatbot':
+                showSection('chatbot');
+                break;
+        }
+    }
+    
+    // New chat
+    function newChat() {
+        currentChat = [];
+        const messagesContainer = document.getElementById('chat-messages');
+        if (messagesContainer) {
+            messagesContainer.innerHTML = '';
+        }
+        
+        const chatTitle = document.getElementById('chat-title');
+        if (chatTitle) {
+            chatTitle.textContent = 'New Chat';
+        }
+        
+        // Focus on input after a short delay
+        setTimeout(() => {
+            const input = document.getElementById('chat-input');
+            if (input) {
+                input.focus();
+                // Scroll to bottom on mobile
+                if (window.innerWidth < 768) {
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }, 100);
+    }
+    
+    // Handle chat keypress
+    function handleChatKeypress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+    
+    // Scroll to bottom of chat
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('chat-messages');
+        if (messagesContainer) {
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
+        }
+    }
+    
+    // Add message to chat
+    function addMessageToChat(role, content) {
+        const messagesContainer = document.getElementById('chat-messages');
+        if (!messagesContainer) return;
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex ${role === 'user' ? 'justify-end' : ''} slide-in`;
+        
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        messageDiv.innerHTML = `
+            <div class="chat-bubble ${role}">
+                <p>${content}</p>
+                <div class="text-xs ${role === 'user' ? 'text-indigo-200' : 'text-gray-400'} mt-2 ${role === 'user' ? 'text-right' : ''}">${time}</div>
+            </div>
+        `;
+        
+        messagesContainer.appendChild(messageDiv);
+        
+        // Save to current chat
+        currentChat.push({ role, content, time });
+    }
+    
+    // Show typing indicator
+    function showTypingIndicator() {
+        const messagesContainer = document.getElementById('chat-messages');
+        if (!messagesContainer) return;
+        
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.className = 'flex slide-in';
+        typingDiv.innerHTML = `
+            <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
+        messagesContainer.appendChild(typingDiv);
+    }
+    
+    // Remove typing indicator
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+    
+    // Toast notification
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        
+        // Add to container
+        const container = document.getElementById('toast-container');
+        container.appendChild(toast);
+        
+        // Animate in
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Toggle theme
+    function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById('theme-icon');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        
+        if (body.getAttribute('data-theme') === 'light') {
+            body.removeAttribute('data-theme');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            darkModeToggle.checked = true;
+            
+            // Save preference
+            saveThemePreference('dark');
+        } else {
+            body.setAttribute('data-theme', 'light');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            darkModeToggle.checked = false;
+            
+            // Save preference
+            saveThemePreference('light');
+        }
+    }
+    
+    // Load theme preference
+    function loadThemePreference() {
+        if (currentUser) {
+            // Load from user preferences
+            // This is handled in showMainApp
+        } else {
+            // Default to dark mode
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-icon').classList.add('fa-moon');
+            document.getElementById('dark-mode-toggle').checked = true;
+        }
+    }
+    
+    // Save theme preference
+    function saveThemePreference(theme) {
+        if (currentUser) {
+            // Save to user preferences in Firestore
+            db.collection('users').doc(currentUser.uid).update({
+                'preferences.theme': theme
+            }).catch(error => {
+                console.error("Error saving theme preference:", error);
+            });
+        }
+    }
+    
+    // Toggle notification panel
+    function toggleNotificationPanel() {
+        const panel = document.getElementById('notification-panel');
+        panel.classList.toggle('show');
+        
+        // Mark notifications as read when opened
+        if (panel.classList.contains('show')) {
+            const unreadItems = panel.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.textContent = '0';
+                badge.style.display = 'none';
+            }
+        }
+    }
+    
+    // Show upgrade modal
+    function showUpgradeModal() {
+        document.getElementById('upgrade-modal').classList.remove('hidden');
+        
+        // Update current plan button
+        const basicBtn = document.getElementById('basic-plan-btn');
+        if (userPlan === 'basic') {
+            basicBtn.textContent = 'Paket Saat Ini';
+            basicBtn.classList.remove('btn-primary');
+            basicBtn.classList.add('glass', 'border', 'border-gray-700', 'text-gray-300', 'hover:bg-gray-800/50');
+        } else {
+            basicBtn.textContent = 'Pilih Basic';
+            basicBtn.classList.add('btn-primary');
+            basicBtn.classList.remove('glass', 'border', 'border-gray-700', 'text-gray-300', 'hover:bg-gray-800/50');
+        }
+    }
+    
+    // Close upgrade modal
+    function closeUpgradeModal() {
+        document.getElementById('upgrade-modal').classList.add('hidden');
+    }
+    
+    // Select plan
+    function selectPlan(plan) {
+        if (!currentUser) {
+            showToast('Please login to upgrade your plan', 'warning');
             return;
         }
         
-        // Update last login time
-        await db.collection('users').doc(user.uid).update({
-            lastLogin: new Date().toISOString()
+        // In a real app, this would process payment
+        showToast(`Anda telah memilih paket ${plan.charAt(0).toUpperCase() + plan.slice(1)}`, 'success');
+        
+        // Update user plan
+        db.collection('users').doc(currentUser.uid).update({
+            plan: plan
+        }).then(() => {
+            userPlan = plan;
+            document.getElementById('user-plan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+            closeUpgradeModal();
+        }).catch(error => {
+            console.error("Error updating plan:", error);
+            showToast('Error updating plan', 'error');
         });
-        
-        showToast('Login berhasil!', 'success');
-    } catch (error) {
-        console.error('Login error:', error);
-        
-        let errorMessage = 'Login failed. Please try again.';
-        
-        // Handle specific Firebase auth errors
-        switch (error.code) {
-            case 'auth/user-not-found':
-                errorMessage = 'No account found with this email.';
-                break;
-            case 'auth/wrong-password':
-                errorMessage = 'Incorrect password.';
-                break;
-            case 'auth/invalid-email':
-                errorMessage = 'Invalid email address.';
-                break;
-            case 'auth/user-disabled':
-                errorMessage = 'This account has been disabled.';
-                break;
-            case 'auth/too-many-requests':
-                errorMessage = 'Too many failed login attempts. Please try again later.';
-                break;
-            case 'auth/network-request-failed':
-                errorMessage = 'Network error. Please check your internet connection.';
-                break;
-            default:
-                errorMessage = `Login failed: ${error.message}`;
-        }
-        
-        showToast(errorMessage, 'error');
-    } finally {
-        // Hide loading indicator
-        document.getElementById('auth-loading').classList.add('hidden');
-        document.getElementById('login-form').style.opacity = '1';
-        document.getElementById('login-form').style.pointerEvents = 'auto';
-    }
-}
-        
-        // Handle register
-async function handleRegister(event) {
-    event.preventDefault();
-    
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    const confirmPassword = document.getElementById('register-confirm-password').value;
-    const agreeTerms = document.getElementById('agree-terms').checked;
-    
-    // Validasi input
-    if (!name || !email || !password || !confirmPassword) {
-        showToast('Please fill in all fields', 'error');
-        return;
     }
     
-    if (password !== confirmPassword) {
-        showToast('Passwords do not match', 'error');
-        return;
-    }
-    
-    if (password.length < 6) {
-        showToast('Password must be at least 6 characters', 'error');
-        return;
-    }
-    
-    if (!agreeTerms) {
-        showToast('Please agree to the terms and conditions', 'error');
-        return;
-    }
-    
-    // Show loading indicator
-    document.getElementById('auth-loading').classList.remove('hidden');
-    document.getElementById('register-form').style.opacity = '0.5';
-    document.getElementById('register-form').style.pointerEvents = 'none';
-    
-    try {
-        // Create user with email and password
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        const user = userCredential.user;
+    // Update notification settings
+    function updateNotificationSettings() {
+        if (!currentUser) return;
         
-        // Update user profile
-        await user.updateProfile({
-            displayName: name
+        const emailNotifications = document.getElementById('email-notifications-toggle').checked;
+        const pushNotifications = document.getElementById('push-notifications-toggle').checked;
+        const updateNotifications = document.getElementById('update-notifications-toggle').checked;
+        
+        db.collection('users').doc(currentUser.uid).update({
+            'preferences.notifications': {
+                email: emailNotifications,
+                push: pushNotifications,
+                updates: updateNotifications
+            }
+        }).catch(error => {
+            console.error("Error updating notification settings:", error);
+            showToast('Error updating notification settings', 'error');
         });
+    }
+    
+    // Save settings
+    function saveSettings() {
+        if (!currentUser) return;
         
-        // Create user document in Firestore
-        const userData = {
-            name: name,
-            email: email,
-            createdAt: new Date().toISOString(),
-            lastLogin: new Date().toISOString(),
-            preferences: {
-                language: 'id',
-                theme: 'dark',
-                notifications: {
-                    email: true,
-                    push: true
-                }
-            },
-            stats: {
-                chats: 0,
-                images: 0,
-                codeSnippets: 0,
-                chatbots: 0
-            }
-        };
-        
-        // Save user data to Firestore
-        await db.collection('users').doc(user.uid).set(userData);
-        
-        // Send verification email
-        await user.sendEmailVerification();
-        
-        showToast('Registration successful! Please check your email for verification.', 'success');
-        
-        // Reset form
-        document.getElementById('register-form-element').reset();
-        
-        // Switch to login form
+        showToast('Pengaturan telah disimpan', 'success');
+    }
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+        // Give it a moment to adjust
         setTimeout(() => {
-            showLogin();
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Registration error:', error);
-        
-        let errorMessage = 'Registration failed. Please try again.';
-        
-        // Handle specific Firebase auth errors
-        switch (error.code) {
-            case 'auth/email-already-in-use':
-                errorMessage = 'An account with this email already exists.';
-                break;
-            case 'auth/invalid-email':
-                errorMessage = 'Invalid email address.';
-                break;
-            case 'auth/operation-not-allowed':
-                errorMessage = 'Email/password accounts are not enabled.';
-                break;
-            case 'auth/weak-password':
-                errorMessage = 'Password is too weak. Please use a stronger password.';
-                break;
-            case 'auth/network-request-failed':
-                errorMessage = 'Network error. Please check your internet connection.';
-                break;
-            case 'auth/too-many-requests':
-                errorMessage = 'Too many requests. Please try again later.';
-                break;
-            default:
-                errorMessage = `Registration failed: ${error.message}`;
-        }
-        
-        showToast(errorMessage, 'error');
-    } finally {
-        // Hide loading indicator
-        document.getElementById('auth-loading').classList.add('hidden');
-        document.getElementById('register-form').style.opacity = '1';
-        document.getElementById('register-form').style.pointerEvents = 'auto';
-    }
-}
-        
-        // Handle reset password
-async function handleResetPassword(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('reset-email').value;
-    
-    if (!email) {
-        showToast('Please enter your email address', 'error');
-        return;
-    }
-    
-    // Show loading indicator
-    document.getElementById('auth-loading').classList.remove('hidden');
-    document.getElementById('reset-password-form').style.opacity = '0.5';
-    document.getElementById('reset-password-form').style.pointerEvents = 'none';
-    
-    try {
-        // Send password reset email
-        await auth.sendPasswordResetEmail(email);
-        
-        showToast('Password reset link sent to your email', 'success');
-        
-        // Reset form
-        document.getElementById('reset-password-form-element').reset();
-        
-        // Switch back to login form after a delay
-        setTimeout(() => {
-            showLogin();
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Reset password error:', error);
-        
-        let errorMessage = 'Failed to reset password. Please try again.';
-        
-        if (error.code === 'auth/user-not-found') {
-            errorMessage = 'No account found with this email.';
-        } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Invalid email address.';
-        }
-        
-        showToast(errorMessage, 'error');
-    } finally {
-        // Hide loading indicator
-        document.getElementById('auth-loading').classList.add('hidden');
-        document.getElementById('reset-password-form').style.opacity = '1';
-        document.getElementById('reset-password-form').style.pointerEvents = 'auto';
-    }
-}
-        
-        // Logout
-        async function logout() {
-            try {
-                await auth.signOut();
-                showToast('You have been logged out', 'info');
-            } catch (error) {
-                console.error('Logout error:', error);
-                showToast('Logout failed. Please try again.', 'error');
+            checkViewportSize();
+            
+            // Adjust chat interface if needed
+            if (currentSection === 'chat') {
+                scrollToBottom();
             }
+        }, 100);
+    });
+    
+    // Handle visibility change (when app comes to foreground)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            // App is now visible, refresh any data if needed
+            console.log('App is now visible');
         }
+    });
+    
+    // Handle login
+    async function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
         
-        // Show login form
-function showLogin() {
-    document.getElementById('login-form').classList.remove('hidden');
-    document.getElementById('register-form').classList.add('hidden');
-    document.getElementById('reset-password-form').classList.add('hidden');
-    document.getElementById('verification-notice').classList.add('hidden');
-    
-    // Reset forms
-    document.getElementById('login-form-element').reset();
-    document.getElementById('register-form-element').reset();
-    document.getElementById('reset-password-form-element').reset();
-}
-
-// Show register form
-function showRegister() {
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('register-form').classList.remove('hidden');
-    document.getElementById('reset-password-form').classList.add('hidden');
-    document.getElementById('verification-notice').classList.add('hidden');
-    
-    // Reset forms
-    document.getElementById('login-form-element').reset();
-    document.getElementById('register-form-element').reset();
-    document.getElementById('reset-password-form-element').reset();
-}
-
-// Show reset password form
-function showResetPassword() {
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('register-form').classList.add('hidden');
-    document.getElementById('reset-password-form').classList.remove('hidden');
-    document.getElementById('verification-notice').classList.add('hidden');
-    
-    // Reset forms
-    document.getElementById('login-form-element').reset();
-    document.getElementById('register-form-element').reset();
-    document.getElementById('reset-password-form-element').reset();
-}
-        
-        // Toggle password visibility
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            
-            // Toggle icon
-            const button = input.nextElementSibling;
-            const icon = button.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-        }
-        
-        // Check password strength
-        function checkPasswordStrength() {
-            const password = document.getElementById('register-password').value;
-            const strengthBar = document.getElementById('password-strength');
-            
-            let strength = 0;
-            
-            // Length check
-            if (password.length >= 8) strength++;
-            
-            // Complexity checks
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[a-z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
-            
-            // Update strength bar
-            strengthBar.className = 'password-strength';
-            if (strength <= 2) {
-                strengthBar.classList.add('weak');
-            } else if (strength === 3) {
-                strengthBar.classList.add('medium');
-            } else {
-                strengthBar.classList.add('strong');
-            }
-        }
-        
-        // Resend verification email
-async function resendVerificationEmail() {
-    const email = document.getElementById('login-email').value;
-    
-    if (!email) {
-        showToast('Please enter your email address first', 'error');
-        return;
-    }
-    
-    try {
         // Show loading indicator
         document.getElementById('auth-loading').classList.remove('hidden');
+        document.getElementById('login-form').style.opacity = '0.5';
+        document.getElementById('login-form').style.pointerEvents = 'none';
         
-        // Send password reset email to trigger verification email
-        await auth.sendPasswordResetEmail(email);
-        
-        showToast('Verification email sent again. Please check your inbox.', 'success');
-        
-    } catch (error) {
-        console.error('Error sending verification email:', error);
-        
-        let errorMessage = 'Failed to send verification email.';
-        
-        if (error.code === 'auth/user-not-found') {
-            errorMessage = 'No account found with this email.';
-        } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Invalid email address.';
-        }
-        
-        showToast(errorMessage, 'error');
-    } finally {
-        // Hide loading indicator
-        document.getElementById('auth-loading').classList.add('hidden');
-    }
-}
-        
-        // Send message to AI using chat.z.ai
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
+        try {
+            // Sign in user with email and password
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
             
-            if (!message || isGenerating) return;
-            
-            // Cancel any ongoing request
-            if (abortController) {
-                abortController.abort();
+            // Check if email is verified
+            if (!user.emailVerified) {
+                showToast('Email Anda belum diverifikasi. Kami telah mengirim ulang tautan verifikasi ke email Anda. Silakan periksa kotak masuk (dan folder spam) Anda.', 'warning');
+                await user.sendEmailVerification();
+                // Tidak perlu signOut di sini, biarkan pengguna tetap login
+                return;
             }
             
-            // Create new AbortController for this request
-            abortController = new AbortController();
+            // Update last login time
+            await db.collection('users').doc(user.uid).update({
+                lastLogin: new Date().toISOString()
+            });
             
-            // Add user message to chat
-            addMessageToChat('user', message);
-            input.value = '';
+            showToast('Login berhasil!', 'success');
+        } catch (error) {
+            console.error('Login error:', error);
             
-            // Show typing indicator
-            showTypingIndicator();
+            let errorMessage = 'Login failed. Please try again.';
+            
+            // Handle specific Firebase auth errors
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'No account found with this email.';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Incorrect password.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address.';
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = 'This account has been disabled.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many failed login attempts. Please try again later.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = 'Network error. Please check your internet connection.';
+                    break;
+                default:
+                    errorMessage = `Login failed: ${error.message}`;
+            }
+            
+            showToast(errorMessage, 'error');
+        } finally {
+            // Hide loading indicator
+            document.getElementById('auth-loading').classList.add('hidden');
+            document.getElementById('login-form').style.opacity = '1';
+            document.getElementById('login-form').style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Handle register
+    async function handleRegister(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        const agreeTerms = document.getElementById('agree-terms').checked;
+        
+        // Validasi input
+        if (!name || !email || !password || !confirmPassword) {
+            showToast('Please fill in all fields', 'error');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+        
+        if (password.length < 6) {
+            showToast('Password must be at least 6 characters', 'error');
+            return;
+        }
+        
+        if (!agreeTerms) {
+            showToast('Please agree to the terms and conditions', 'error');
+            return;
+        }
+        
+        // Show loading indicator
+        document.getElementById('auth-loading').classList.remove('hidden');
+        document.getElementById('register-form').style.opacity = '0.5';
+        document.getElementById('register-form').style.pointerEvents = 'none';
+        
+        try {
+            // Create user with email and password
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            // Update user profile
+            await user.updateProfile({
+                displayName: name
+            });
+            
+            // Create user document in Firestore
+            const userData = {
+                name: name,
+                email: email,
+                plan: 'basic',
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString(),
+                preferences: {
+                    language: 'id',
+                    theme: 'dark',
+                    notifications: {
+                        email: true,
+                        push: true,
+                        updates: true
+                    }
+                },
+                stats: {
+                    chats: 0,
+                    images: 0,
+                    codeSnippets: 0,
+                    chatbots: 0
+                }
+            };
+            
+            // Save user data to Firestore
+            await db.collection('users').doc(user.uid).set(userData);
+            
+            // Send verification email
+            await user.sendEmailVerification();
+            
+            showToast('Registration successful! Please check your email for verification.', 'success');
+            
+            // Reset form
+            document.getElementById('register-form-element').reset();
+            
+            // Switch to login form
+            setTimeout(() => {
+                showLogin();
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Registration error:', error);
+            
+            let errorMessage = 'Registration failed. Please try again.';
+            
+            // Handle specific Firebase auth errors
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'An account with this email already exists.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address.';
+                    break;
+                case 'auth/operation-not-allowed':
+                    errorMessage = 'Email/password accounts are not enabled.';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Password is too weak. Please use a stronger password.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = 'Network error. Please check your internet connection.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many requests. Please try again later.';
+                    break;
+                default:
+                    errorMessage = `Registration failed: ${error.message}`;
+            }
+            
+            showToast(errorMessage, 'error');
+        } finally {
+            // Hide loading indicator
+            document.getElementById('auth-loading').classList.add('hidden');
+            document.getElementById('register-form').style.opacity = '1';
+            document.getElementById('register-form').style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Handle reset password
+    async function handleResetPassword(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('reset-email').value;
+        
+        if (!email) {
+            showToast('Please enter your email address', 'error');
+            return;
+        }
+        
+        // Show loading indicator
+        document.getElementById('auth-loading').classList.remove('hidden');
+        document.getElementById('reset-password-form').style.opacity = '0.5';
+        document.getElementById('reset-password-form').style.pointerEvents = 'none';
+        
+        try {
+            // Send password reset email
+            await auth.sendPasswordResetEmail(email);
+            
+            showToast('Password reset link sent to your email', 'success');
+            
+            // Reset form
+            document.getElementById('reset-password-form-element').reset();
+            
+            // Switch back to login form after a delay
+            setTimeout(() => {
+                showLogin();
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Reset password error:', error);
+            
+            let errorMessage = 'Failed to reset password. Please try again.';
+            
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address.';
+            }
+            
+            showToast(errorMessage, 'error');
+        } finally {
+            // Hide loading indicator
+            document.getElementById('auth-loading').classList.add('hidden');
+            document.getElementById('reset-password-form').style.opacity = '1';
+            document.getElementById('reset-password-form').style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Logout
+    async function logout() {
+        try {
+            await auth.signOut();
+            showToast('You have been logged out', 'info');
+        } catch (error) {
+            console.error('Logout error:', error);
+            showToast('Logout failed. Please try again.', 'error');
+        }
+    }
+    
+    // Show login form
+    function showLogin() {
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+        document.getElementById('reset-password-form').classList.add('hidden');
+        document.getElementById('verification-notice').classList.add('hidden');
+        
+        // Reset forms
+        document.getElementById('login-form-element').reset();
+        document.getElementById('register-form-element').reset();
+        document.getElementById('reset-password-form-element').reset();
+    }
+    
+    // Show register form
+    function showRegister() {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.remove('hidden');
+        document.getElementById('reset-password-form').classList.add('hidden');
+        document.getElementById('verification-notice').classList.add('hidden');
+        
+        // Reset forms
+        document.getElementById('login-form-element').reset();
+        document.getElementById('register-form-element').reset();
+        document.getElementById('reset-password-form-element').reset();
+    }
+    
+    // Show reset password form
+    function showResetPassword() {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+        document.getElementById('reset-password-form').classList.remove('hidden');
+        document.getElementById('verification-notice').classList.add('hidden');
+        
+        // Reset forms
+        document.getElementById('login-form-element').reset();
+        document.getElementById('register-form-element').reset();
+        document.getElementById('reset-password-form-element').reset();
+    }
+    
+    // Toggle password visibility
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        
+        // Toggle icon
+        const button = input.nextElementSibling;
+        const icon = button.querySelector('i');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    }
+    
+    // Check password strength
+    function checkPasswordStrength() {
+        const password = document.getElementById('register-password').value;
+        const strengthBar = document.getElementById('password-strength');
+        
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength++;
+        
+        // Complexity checks
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        // Update strength bar
+        strengthBar.className = 'password-strength';
+        if (strength <= 2) {
+            strengthBar.classList.add('weak');
+        } else if (strength === 3) {
+            strengthBar.classList.add('medium');
+        } else {
+            strengthBar.classList.add('strong');
+        }
+    }
+    
+    // Resend verification email
+    async function resendVerificationEmail() {
+        const email = document.getElementById('login-email').value;
+        
+        if (!email) {
+            showToast('Please enter your email address first', 'error');
+            return;
+        }
+        
+        try {
+            // Show loading indicator
+            document.getElementById('auth-loading').classList.remove('hidden');
+            
+            // Send password reset email to trigger verification email
+            await auth.sendPasswordResetEmail(email);
+            
+            showToast('Verification email sent again. Please check your inbox.', 'success');
+            
+        } catch (error) {
+            console.error('Error sending verification email:', error);
+            
+            let errorMessage = 'Failed to send verification email.';
+            
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address.';
+            }
+            
+            showToast(errorMessage, 'error');
+        } finally {
+            // Hide loading indicator
+            document.getElementById('auth-loading').classList.add('hidden');
+        }
+    }
+    
+    // Send message to AI using Gemini
+    async function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+        
+        if (!message || isGenerating) return;
+        
+        // Check user plan limits
+        if (userPlan === 'basic') {
+            // In a real app, you would check daily usage limits
+            // For now, we'll just proceed
+        }
+        
+        // Cancel any ongoing request
+        if (abortController) {
+            abortController.abort();
+        }
+        
+        // Create new AbortController for this request
+        abortController = new AbortController();
+        
+        // Add user message to chat
+        addMessageToChat('user', message);
+        input.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Scroll to bottom
+        scrollToBottom();
+        
+        try {
+            // Call Gemini API
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: message
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 1024,
+                    }
+                }),
+                signal: abortController.signal
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Remove typing indicator
+            removeTypingIndicator();
+            
+            // Read the response
+            const data = await response.json();
+            
+            // Extract AI response
+            let aiResponse = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        aiResponse += part.text;
+                    }
+                }
+            }
+            
+            if (!aiResponse) {
+                aiResponse = 'No response from AI';
+            }
+            
+            // Add AI response to chat
+            addMessageToChat('ai', aiResponse);
+            
+            // Add activity
+            addActivity('chat', 'New chat with AI');
             
             // Scroll to bottom
             scrollToBottom();
             
-            try {
-                // Call chat.z.ai API
-                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        model: 'gpt-4', // atau model lain yang didukung
-                        temperature: 0.7,
-                        max_tokens: 1000
-                    }),
-                    signal: abortController.signal
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                // Remove typing indicator
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                console.log('Request was aborted');
+            } else {
                 removeTypingIndicator();
-                
-                // Read the response
-                const data = await response.json();
-                const aiResponse = data.response || data.message || 'No response from AI';
-                
-                // Add AI response to chat
-                addMessageToChat('ai', aiResponse);
-                
-                // Scroll to bottom
+                addMessageToChat('ai', 'Sorry, I encountered an error. Please try again.');
                 scrollToBottom();
-                
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    console.log('Request was aborted');
-                } else {
-                    removeTypingIndicator();
-                    addMessageToChat('ai', 'Sorry, I encountered an error. Please try again.');
-                    scrollToBottom();
-                    console.error('Error:', error);
-                }
-            } finally {
-                isGenerating = false;
-                abortController = null;
+                console.error('Error:', error);
             }
+        } finally {
+            isGenerating = false;
+            abortController = null;
+        }
+    }
+    
+    // Generate text using Gemini
+    async function generateText() {
+        const prompt = document.getElementById('text-prompt').value;
+        const resultDiv = document.getElementById('text-result');
+        
+        if (!prompt) {
+            showToast('Please enter a prompt', 'error');
+            return;
         }
         
-        // Generate text using chat.z.ai
-        async function generateText() {
-            const prompt = document.getElementById('text-prompt').value;
-            const resultDiv = document.getElementById('text-result');
-            
-            if (!prompt) {
-                showToast('Please enter a prompt', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use chat.z.ai API
-                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        message: prompt,
-                        model: 'gpt-4',
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
                         temperature: 0.7,
-                        max_tokens: 2000
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const result = data.response || data.result || 'No text generated';
-                
-                resultDiv.innerHTML = `<div class="prose prose-invert max-w-none">${result}</div>`;
-                showToast('Text generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating text. Please try again.</div>';
-                showToast('Error generating text', 'error');
-                console.error('Text generation error:', error);
-            }
-        }
-        
-        // Generate image using Gemini Pro
-        async function generateImage() {
-            const prompt = document.getElementById('image-prompt').value;
-            const resultDiv = document.getElementById('image-result');
-            
-            if (!prompt) {
-                showToast('Please enter a prompt', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use Gemini Pro to generate image
-                const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}gemini-pro-vision:generateContent?key=${API_CONFIG.GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Generate an image based on this description: ${prompt}`
-                            }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.4,
-                            topK: 32,
-                            topP: 1,
-                            maxOutputTokens: 2048,
-                        }
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Extract image from response
-                let imageUrl = '';
-                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-                    const parts = data.candidates[0].content.parts;
-                    for (const part of parts) {
-                        if (part.inlineData && part.inlineData.mimeType.startsWith('image/')) {
-                            imageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-                            break;
-                        }
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 2048,
                     }
-                }
-                
-                if (!imageUrl) {
-                    // Fallback to placeholder if no image is generated
-                    imageUrl = `https://picsum.photos/seed/${encodeURIComponent(prompt)}/1024/1024.jpg`;
-                }
-                
-                resultDiv.innerHTML = `<img src="${imageUrl}" alt="Generated image" class="max-w-full h-auto mx-auto rounded-lg">`;
-                showToast('Image generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating image. Please try again.</div>';
-                showToast('Error generating image', 'error');
-                console.error('Image generation error:', error);
-            }
-        }
-        
-        // Generate video using Gemini Pro
-        async function generateVideo() {
-            const prompt = document.getElementById('video-prompt').value;
-            const resultDiv = document.getElementById('video-result');
-            
-            if (!prompt) {
-                showToast('Please enter a prompt', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use Gemini Pro to generate video description
-                const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}gemini-pro:generateContent?key=${API_CONFIG.GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Generate a detailed description for a video based on this prompt: ${prompt}. Include scene descriptions, transitions, and visual elements.`
-                            }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.7,
-                            topK: 40,
-                            topP: 0.95,
-                            maxOutputTokens: 2048,
-                        }
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Extract video description
-                let videoDescription = '';
-                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-                    const parts = data.candidates[0].content.parts;
-                    for (const part of parts) {
-                        if (part.text) {
-                            videoDescription += part.text;
-                        }
-                    }
-                }
-                
-                // For now, we'll simulate video generation with a placeholder
-                // In a real implementation, you would use a video generation API
-                const videoUrl = `https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4`;
-                
-                resultDiv.innerHTML = `
-                    <div class="text-center">
-                        <video controls class="max-w-full h-auto mx-auto rounded-lg">
-                            <source src="${videoUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="mt-4 p-4 glass-light rounded-lg text-left">
-                            <h4 class="font-medium mb-2">Generated Video Description:</h4>
-                            <p class="text-gray-300">${videoDescription}</p>
-                        </div>
-                    </div>
-                `;
-                showToast('Video generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating video. Please try again.</div>';
-                showToast('Error generating video', 'error');
-                console.error('Video generation error:', error);
-            }
-        }
-        
-        // Generate audio (placeholder)
-        async function generateAudio() {
-            const prompt = document.getElementById('audio-prompt').value;
-            const resultDiv = document.getElementById('audio-result');
-            
-            if (!prompt) {
-                showToast('Please enter a prompt', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            // Simulate audio generation
-            setTimeout(() => {
-                resultDiv.innerHTML = `
-                    <div class="text-center">
-                        <audio controls class="mx-auto">
-                            <source src="https://sample-videos.com/zip/10/mp3/SampleAudio_0.4mb.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                        <p class="mt-3 text-gray-400">Generated audio placeholder</p>
-                    </div>
-                `;
-                showToast('Audio generated successfully', 'success');
-            }, 2000);
-        }
-        
-        // Build website using chat.z.ai
-        async function buildWebsite() {
-            const prompt = document.getElementById('web-prompt').value;
-            const framework = document.querySelector('#web-tab select').value;
-            const resultDiv = document.getElementById('web-result');
-            
-            if (!prompt) {
-                showToast('Please describe your website', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use chat.z.ai builder API
-                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        type: 'website',
-                        prompt: prompt,
-                        framework: framework,
-                        features: getSelectedFeatures('web')
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const result = data.code || data.result || 'No code generated';
-                
-                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
-                showToast('Website code generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
-                showToast('Error generating code', 'error');
-                console.error('Website generation error:', error);
-            }
-        }
-        
-        // Build app using chat.z.ai
-        async function buildApp() {
-            const prompt = document.getElementById('app-prompt').value;
-            const platform = document.querySelector('#app-tab select').value;
-            const resultDiv = document.getElementById('app-result');
-            
-            if (!prompt) {
-                showToast('Please describe your app', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use chat.z.ai builder API
-                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        type: 'app',
-                        prompt: prompt,
-                        platform: platform,
-                        features: getSelectedFeatures('app')
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const result = data.code || data.result || 'No code generated';
-                
-                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
-                showToast('App code generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
-                showToast('Error generating code', 'error');
-                console.error('App generation error:', error);
-            }
-        }
-        
-        // Build API using chat.z.ai
-        async function buildAPI() {
-            const prompt = document.getElementById('api-prompt').value;
-            const technology = document.querySelector('#api-tab select').value;
-            const resultDiv = document.getElementById('api-result');
-            
-            if (!prompt) {
-                showToast('Please describe your API', 'error');
-                return;
-            }
-            
-            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-            
-            try {
-                // Use chat.z.ai builder API
-                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        type: 'api',
-                        prompt: prompt,
-                        technology: technology,
-                        features: getSelectedFeatures('api')
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const result = data.code || data.result || 'No code generated';
-                
-                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
-                showToast('API code generated successfully', 'success');
-                
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
-                showToast('Error generating code', 'error');
-                console.error('API generation error:', error);
-            }
-        }
-        
-        // Build chatbot using Dialogflow
-        async function buildChatbot() {
-            const name = document.getElementById('chatbot-name').value;
-            const description = document.getElementById('chatbot-description').value;
-            const personality = document.getElementById('chatbot-personality').value;
-            const language = document.getElementById('chatbot-language').value;
-            const channels = getSelectedChannels();
-            
-            if (!name || !description) {
-                showToast('Please fill in the required fields', 'error');
-                return;
-            }
-            
-            // Show loading indicator
-            const saveButton = document.querySelector('#chatbot-section button');
-            const originalText = saveButton.textContent;
-            saveButton.textContent = 'Creating...';
-            saveButton.disabled = true;
-            
-            try {
-                // Create chatbot using Dialogflow API
-                const response = await fetch(`${API_CONFIG.DIALOGFLOW_BASE_URL}${API_CONFIG.DIALOGFLOW_PROJECT_ID}/agent`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.DIALOGFLOW_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        displayName: name,
-                        description: description,
-                        defaultLanguageCode: language,
-                        supportedLanguageCodes: [language],
-                        timeZone: 'Asia/Jakarta'
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                // Create intent for the chatbot
-                const intentResponse = await fetch(`${API_CONFIG.DIALOGFLOW_BASE_URL}${API_CONFIG.DIALOGFLOW_PROJECT_ID}/intents`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.DIALOGFLOW_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        displayName: 'Default Welcome Intent',
-                        priority: 500000,
-                        webhookState: 'WEBHOOK_STATE_ENABLED',
-                        trainingPhrases: [
-                            {
-                                type: 'EXAMPLE',
-                                parts: [
-                                    {
-                                        text: 'Hello'
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'EXAMPLE',
-                                parts: [
-                                    {
-                                        text: 'Hi'
-                                    }
-                                ]
-                            }
-                        ],
-                        messages: [
-                            {
-                                text: {
-                                    text: [
-                                        `Hello! I'm ${name}. ${description}`
-                                    ]
-                                }
-                            }
-                        ]
-                    })
-                });
-                
-                if (!intentResponse.ok) {
-                    throw new Error(`HTTP error! status: ${intentResponse.status}`);
-                }
-                
-                const intentData = await intentResponse.json();
-                
-                showToast('Chatbot created successfully', 'success');
-                
-            } catch (error) {
-                showToast('Error creating chatbot. Please try again.', 'error');
-                console.error('Chatbot creation error:', error);
-            } finally {
-                // Reset button
-                saveButton.textContent = originalText;
-                saveButton.disabled = false;
-            }
-        }
-        
-        // Helper function to get selected features
-        function getSelectedFeatures(type) {
-            const features = [];
-            const checkboxes = document.querySelectorAll(`#${type}-tab input[type="checkbox"]:checked`);
-            
-            checkboxes.forEach(checkbox => {
-                features.push(checkbox.nextElementSibling.textContent.trim());
+                })
             });
             
-            return features;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract AI response
+            let result = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        result += part.text;
+                    }
+                }
+            }
+            
+            if (!result) {
+                result = 'No text generated';
+            }
+            
+            resultDiv.innerHTML = `<div class="prose prose-invert max-w-none">${result}</div>`;
+            showToast('Text generated successfully', 'success');
+            
+            // Add activity
+            addActivity('code', 'Generated text content');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating text. Please try again.</div>';
+            showToast('Error generating text', 'error');
+            console.error('Text generation error:', error);
+        }
+    }
+    
+    // Generate image using Gemini
+    async function generateImage() {
+        const prompt = document.getElementById('image-prompt').value;
+        const resultDiv = document.getElementById('image-result');
+        
+        if (!prompt) {
+            showToast('Please enter a prompt', 'error');
+            return;
         }
         
-        // Helper function to get selected channels
-        function getSelectedChannels() {
-            const channels = [];
-            const checkboxes = document.querySelectorAll('#chatbot-section input[type="checkbox"]:checked');
-            
-            checkboxes.forEach(checkbox => {
-                if (checkbox.closest('#chatbot-section')) {
-                    channels.push(checkbox.nextElementSibling.textContent.trim());
-                }
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API for image generation
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate an image based on this description: ${prompt}`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.4,
+                        topK: 32,
+                        topP: 1,
+                        maxOutputTokens: 2048,
+                    }
+                })
             });
             
-            return channels;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract image from response
+            let imageUrl = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.inlineData && part.inlineData.mimeType.startsWith('image/')) {
+                        imageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+                        break;
+                    }
+                }
+            }
+            
+            if (!imageUrl) {
+                // Fallback to placeholder if no image is generated
+                imageUrl = `https://picsum.photos/seed/${encodeURIComponent(prompt)}/1024/1024.jpg`;
+            }
+            
+            resultDiv.innerHTML = `<img src="${imageUrl}" alt="Generated image" class="max-w-full h-auto mx-auto rounded-lg">`;
+            showToast('Image generated successfully', 'success');
+            
+            // Add activity
+            addActivity('image', 'Generated image with AI');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating image. Please try again.</div>';
+            showToast('Error generating image', 'error');
+            console.error('Image generation error:', error);
         }
+    }
+    
+    // Generate video using Gemini
+    async function generateVideo() {
+        const prompt = document.getElementById('video-prompt').value;
+        const resultDiv = document.getElementById('video-result');
+        
+        if (!prompt) {
+            showToast('Please enter a prompt', 'error');
+            return;
+        }
+        
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API to generate video description
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate a detailed description for a video based on this prompt: ${prompt}. Include scene descriptions, transitions, and visual elements.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 2048,
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract video description
+            let videoDescription = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        videoDescription += part.text;
+                    }
+                }
+            }
+            
+            // For now, we'll simulate video generation with a placeholder
+            // In a real implementation, you would use a video generation API
+            const videoUrl = `https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4`;
+            
+            resultDiv.innerHTML = `
+                <div class="text-center">
+                    <video controls class="max-w-full h-auto mx-auto rounded-lg">
+                        <source src="${videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="mt-4 p-4 glass-light rounded-lg text-left">
+                        <h4 class="font-medium mb-2">Generated Video Description:</h4>
+                        <p class="text-gray-300">${videoDescription}</p>
+                    </div>
+                </div>
+            `;
+            showToast('Video generated successfully', 'success');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating video. Please try again.</div>';
+            showToast('Error generating video', 'error');
+            console.error('Video generation error:', error);
+        }
+    }
+    
+    // Generate audio (placeholder)
+    async function generateAudio() {
+        const prompt = document.getElementById('audio-prompt').value;
+        const resultDiv = document.getElementById('audio-result');
+        
+        if (!prompt) {
+            showToast('Please enter a prompt', 'error');
+            return;
+        }
+        
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        // Simulate audio generation
+        setTimeout(() => {
+            resultDiv.innerHTML = `
+                <div class="text-center">
+                    <audio controls class="mx-auto">
+                        <source src="https://sample-videos.com/zip/10/mp3/SampleAudio_0.4mb.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <p class="mt-3 text-gray-400">Generated audio placeholder</p>
+                </div>
+            `;
+            showToast('Audio generated successfully', 'success');
+        }, 2000);
+    }
+    
+    // Build website using Gemini
+    async function buildWebsite() {
+        const prompt = document.getElementById('web-prompt').value;
+        const framework = document.querySelector('#web-tab select').value;
+        const resultDiv = document.getElementById('web-result');
+        
+        if (!prompt) {
+            showToast('Please describe your website', 'error');
+            return;
+        }
+        
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate a ${framework} website code based on this description: ${prompt}. Include all necessary HTML, CSS, and JavaScript code.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 4096,
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract code
+            let result = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        result += part.text;
+                    }
+                }
+            }
+            
+            if (!result) {
+                result = 'No code generated';
+            }
+            
+            resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+            showToast('Website code generated successfully', 'success');
+            
+            // Add activity
+            addActivity('code', 'Generated website code');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+            showToast('Error generating code', 'error');
+            console.error('Website generation error:', error);
+        }
+    }
+    
+    // Build app using Gemini
+    async function buildApp() {
+        const prompt = document.getElementById('app-prompt').value;
+        const platform = document.querySelector('#app-tab select').value;
+        const resultDiv = document.getElementById('app-result');
+        
+        if (!prompt) {
+            showToast('Please describe your app', 'error');
+            return;
+        }
+        
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate a ${platform} mobile app code based on this description: ${prompt}. Include all necessary code files.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 4096,
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract code
+            let result = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        result += part.text;
+                    }
+                }
+            }
+            
+            if (!result) {
+                result = 'No code generated';
+            }
+            
+            resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+            showToast('App code generated successfully', 'success');
+            
+            // Add activity
+            addActivity('code', 'Generated app code');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+            showToast('Error generating code', 'error');
+            console.error('App generation error:', error);
+        }
+    }
+    
+    // Build API using Gemini
+    async function buildAPI() {
+        const prompt = document.getElementById('api-prompt').value;
+        const technology = document.querySelector('#api-tab select').value;
+        const resultDiv = document.getElementById('api-result');
+        
+        if (!prompt) {
+            showToast('Please describe your API', 'error');
+            return;
+        }
+        
+        resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        try {
+            // Call Gemini API
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate a ${technology} API code based on this description: ${prompt}. Include all necessary code files and documentation.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 4096,
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract code
+            let result = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        result += part.text;
+                    }
+                }
+            }
+            
+            if (!result) {
+                result = 'No code generated';
+            }
+            
+            resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+            showToast('API code generated successfully', 'success');
+            
+            // Add activity
+            addActivity('code', 'Generated API code');
+            
+        } catch (error) {
+            resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+            showToast('Error generating code', 'error');
+            console.error('API generation error:', error);
+        }
+    }
+    
+    // Build chatbot using Gemini
+    async function buildChatbot() {
+        const name = document.getElementById('chatbot-name').value;
+        const description = document.getElementById('chatbot-description').value;
+        const personality = document.getElementById('chatbot-personality').value;
+        const language = document.getElementById('chatbot-language').value;
+        const channels = getSelectedChannels();
+        
+        if (!name || !description) {
+            showToast('Please fill in the required fields', 'error');
+            return;
+        }
+        
+        // Show loading indicator
+        const saveButton = document.querySelector('#chatbot-section button');
+        const originalText = saveButton.textContent;
+        saveButton.textContent = 'Creating...';
+        saveButton.disabled = true;
+        
+        try {
+            // Call Gemini API to generate chatbot code
+            const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate a chatbot with the following specifications:
+                            Name: ${name}
+                            Description: ${description}
+                            Personality: ${personality}
+                            Language: ${language}
+                            Channels: ${channels.join(', ')}
+                            Include all necessary code files and setup instructions.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 4096,
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract chatbot code
+            let chatbotCode = '';
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                const parts = data.candidates[0].content.parts;
+                for (const part of parts) {
+                    if (part.text) {
+                        chatbotCode += part.text;
+                    }
+                }
+            }
+            
+            showToast('Chatbot created successfully', 'success');
+            
+            // Add activity
+            addActivity('chatbot', `Created chatbot: ${name}`);
+            
+        } catch (error) {
+            showToast('Error creating chatbot. Please try again.', 'error');
+            console.error('Chatbot creation error:', error);
+        } finally {
+            // Reset button
+            saveButton.textContent = originalText;
+            saveButton.disabled = false;
+        }
+    }
+    
+    // Helper function to get selected features
+    function getSelectedFeatures(type) {
+        const features = [];
+        const checkboxes = document.querySelectorAll(`#${type}-tab input[type="checkbox"]:checked`);
+        
+        checkboxes.forEach(checkbox => {
+            features.push(checkbox.nextElementSibling.textContent.trim());
+        });
+        
+        return features;
+    }
+    
+    // Helper function to get selected channels
+    function getSelectedChannels() {
+        const channels = [];
+        const checkboxes = document.querySelectorAll('#chatbot-section input[type="checkbox"]:checked');
+        
+        checkboxes.forEach(checkbox => {
+            if (checkbox.closest('#chatbot-section')) {
+                channels.push(checkbox.nextElementSibling.textContent.trim());
+            }
+        });
+        
+        return channels;
+    }
     </script>
 </body>
 </html>
