@@ -1,0 +1,3441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AI Nexus - Platform AI Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        /* CSS Variables untuk responsivitas */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --sidebar-width: 16rem;
+            --sidebar-width-collapsed: 4rem;
+            --header-height: 4rem;
+            --border-radius: 0.75rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Reset dan base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .glass-light {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.3s ease-out;
+        }
+        
+        .typing-animation {
+            animation: typing 1.4s infinite;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 28rem;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+        
+        /* Sidebar Styles - Mobile First */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            z-index: 50;
+            transition: var(--transition);
+            transform: translateX(-100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+                width: var(--sidebar-width);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .sidebar {
+                width: var(--sidebar-width);
+            }
+        }
+        
+        .sidebar-item {
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            margin: 0.25rem 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .sidebar-item:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                margin-left: var(--sidebar-width);
+            }
+        }
+        
+        /* Header */
+        .header {
+            height: var(--header-height);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (min-width: 640px) {
+            .content-area {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .content-area {
+                padding: 2rem;
+            }
+        }
+        
+        /* Chat Styles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - var(--header-height));
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (min-width: 640px) {
+            .chat-messages {
+                padding: 1.5rem;
+            }
+        }
+        
+        .chat-input-area {
+            flex-shrink: 0;
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-bubble {
+            position: relative;
+            max-width: 85%;
+            word-wrap: break-word;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .chat-bubble {
+                max-width: 70%;
+                padding: 1rem 1.25rem;
+            }
+        }
+        
+        .chat-bubble.user {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 1rem 1rem 0.25rem 1rem;
+            margin-left: auto;
+        }
+        
+        .chat-bubble.ai {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 1rem 1rem 1rem 0.25rem;
+        }
+        
+        /* Typing Indicator */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 1rem;
+        }
+        
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        /* Streaming text animation */
+        .streaming-text {
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .streaming-text::after {
+            content: '|';
+            animation: typing 1s infinite;
+            color: var(--primary);
+        }
+        
+        /* Card Styles */
+        .feature-card {
+            transition: var(--transition);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        /* Input Styles */
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        /* Code Editor */
+        .code-editor {
+            background: #0f172a;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+        
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: loading 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .loading-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes loading {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.8);
+        }
+        
+        /* Tab Styles */
+        .tab-active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary) !important;
+        }
+        
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 60;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 45;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        @media (min-width: 768px) {
+            .overlay {
+                display: none;
+            }
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .toast.info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .toast.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        /* Form Styles */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+        
+        /* Responsive Grid */
+        .responsive-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .responsive-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .responsive-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Responsive Text Sizes */
+        .text-responsive-xs {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+        
+        .text-responsive-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        
+        .text-responsive-base {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+        
+        .text-responsive-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+        
+        .text-responsive-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+        
+        .text-responsive-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+        
+        .text-responsive-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+        
+        @media (min-width: 640px) {
+            .text-responsive-3xl {
+                font-size: 2.25rem;
+                line-height: 2.5rem;
+            }
+        }
+        
+        /* Touch-friendly elements */
+        .touch-target {
+            min-height: 2.75rem;
+            min-width: 2.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive padding */
+        .p-responsive {
+            padding: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .p-responsive {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .p-responsive {
+                padding: 2rem;
+            }
+        }
+        
+        /* Responsive margins */
+        .mb-responsive {
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mb-responsive {
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .mb-responsive {
+                margin-bottom: 2rem;
+            }
+        }
+        
+        /* Hide on mobile */
+        .hide-mobile {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .hide-mobile {
+                display: block;
+            }
+        }
+        
+        /* Show on mobile */
+        .show-mobile {
+            display: block;
+        }
+        
+        @media (min-width: 768px) {
+            .show-mobile {
+                display: none;
+            }
+        }
+        
+        /* Orientation specific styles */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header {
+                height: 3rem;
+            }
+            
+            .sidebar {
+                width: 14rem;
+            }
+            
+            @media (min-width: 768px) {
+                .main-content {
+                    margin-left: 14rem;
+                }
+            }
+        }
+        
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .glass {
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .sidebar,
+            .header,
+            .mobile-menu-btn,
+            .overlay {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .glass,
+            .glass-light {
+                background: white;
+                border: 1px solid #e5e7eb;
+                box-shadow: none;
+            }
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 1.5rem;
+            height: 1.5rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* AI Model Badge */
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background: rgba(236, 72, 153, 0.2);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #f9a8d4;
+        }
+        
+        .ai-badge i {
+            margin-right: 0.25rem;
+        }
+        
+        /* Password Strength Indicator */
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .password-strength.weak {
+            background: #ef4444;
+            width: 33%;
+        }
+        
+        .password-strength.medium {
+            background: #f59e0b;
+            width: 66%;
+        }
+        
+        .password-strength.strong {
+            background: #10b981;
+            width: 100%;
+        }
+        
+        /* Verification Notice */
+        .verification-notice {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .verification-notice i {
+            color: #f59e0b;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Register Pages -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-card p-8">
+            <!-- Logo and Title -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold gradient-text">AI Nexus</h1>
+                <p class="text-gray-400 mt-2">Platform AI Premium</p>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="auth-loading" class="hidden text-center py-4">
+                <div class="spinner mx-auto"></div>
+                <p class="mt-2 text-gray-400">Memproses...</p>
+            </div>
+            
+            <!-- Verification Notice (hidden by default) -->
+            <div id="verification-notice" class="verification-notice hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <p class="text-sm font-medium">Email Verification Required</p>
+                    <p class="text-xs text-gray-300">Please check your email and verify your account before logging in.</p>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2 class="text-2xl font-bold text-white mb-6">Masuk ke Akun Anda</h2>
+                <form id="login-form-element" onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label for="login-email" class="form-label">Email</label>
+                        <input type="email" id="login-email" class="form-input" placeholder="nama@email.com" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="form-label">Password</label>
+                        <div class="relative">
+                            <input type="password" id="login-password" class="form-input pr-10" placeholder="••••••••" required>
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white" onclick="togglePassword('login-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                            <span class="text-gray-300">Ingat saya</span>
+                        </label>
+                        <a href="#" onclick="showResetPassword()" class="text-indigo-400 hover:text-indigo-300 text-sm">Lupa password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary w-full justify-center">
+                        <span>Masuk</span>
+                    </button>
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-400">Belum punya akun? <a href="#" onclick="showRegister()" class="text-indigo-400 hover:text-indigo-300">Daftar sekarang</a></p>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-gray-400 text-sm">Didn't receive verification email? <a href="#" onclick="resendVerificationEmail()" class="text-indigo-400 hover:text-indigo-300">Resend</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form hidden">
+                <h2 class="text-2xl font-bold text-white mb-6">Buat Akun Baru</h2>
+                <form id="register-form-element" onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label for="register-name" class="form-label">Nama Lengkap</label>
+                        <input type="text" id="register-name" class="form-input" placeholder="John Doe" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-email" class="form-label">Email</label>
+                        <input type="email" id="register-email" class="form-input" placeholder="nama@email.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-password" class="form-label">Password</label>
+                        <div class="relative">
+                            <input type="password" id="register-password" class="form-input pr-10" placeholder="••••••••" required oninput="checkPasswordStrength()">
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white" onclick="togglePassword('register-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div id="password-strength" class="password-strength"></div>
+                        <p class="text-xs text-gray-400 mt-1">Password harus minimal 6 karakter</p>
+                    </div>
+                    <div class="mb-6">
+                        <label for="register-confirm-password" class="form-label">Konfirmasi Password</label>
+                        <div class="relative">
+                            <input type="password" id="register-confirm-password" class="form-input pr-10" placeholder="••••••••" required>
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white" onclick="togglePassword('register-confirm-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="agree-terms" class="rounded text-indigo-600 mr-2" required>
+                            <span class="text-gray-300">Saya setuju dengan <a href="#" class="text-indigo-400 hover:text-indigo-300">Syarat & Ketentuan</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary w-full justify-center">
+                        <span>Daftar</span>
+                    </button>
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-400">Sudah punya akun? <a href="#" onclick="showLogin()" class="text-indigo-400 hover:text-indigo-300">Masuk</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Reset Password Form -->
+            <div id="reset-password-form" class="auth-form hidden">
+                <h2 class="text-2xl font-bold text-white mb-6">Reset Password</h2>
+                <form id="reset-password-form-element" onsubmit="handleResetPassword(event)">
+                    <div class="mb-6">
+                        <label for="reset-email" class="form-label">Email</label>
+                        <input type="email" id="reset-email" class="form-input" placeholder="nama@email.com" required>
+                        <p class="text-gray-400 text-sm mt-2">Kami akan mengirimkan link reset password ke email Anda</p>
+                    </div>
+                    <button type="submit" class="btn-primary w-full justify-center">
+                        <span>Kirim Link Reset</span>
+                    </button>
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-400">Kembali ke <a href="#" onclick="showLogin()" class="text-indigo-400 hover:text-indigo-300">Halaman Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main App (Hidden by default) -->
+    <div id="main-app" class="hidden">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn glass touch-target" onclick="toggleSidebar()" aria-label="Toggle menu">
+            <i class="fas fa-bars text-white text-xl"></i>
+        </button>
+        <!-- Overlay -->
+        <div class="overlay" onclick="toggleSidebar()"></div>
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar glass" role="navigation" aria-label="Main navigation">
+            <div class="p-6 border-b border-gray-700">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i class="fas fa-brain text-white"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="text-responsive-xl font-bold gradient-text truncate">AI Nexus</h1>
+                        <p class="text-responsive-xs text-gray-400">Platform AI Premium</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-4">
+                <div class="px-4 mb-6">
+                    <button onclick="newChat()" class="w-full btn-primary text-white">
+                        <i class="fas fa-plus mr-2"></i>
+                        <span>Chat Baru</span>
+                    </button>
+                </div>
+                
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="sidebar-item active flex items-center" data-section="dashboard">
+                            <i class="fas fa-home w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="chat">
+                            <i class="fas fa-comments w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Chat AI</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="playground">
+                            <i class="fas fa-magic w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Playground</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="builder">
+                            <i class="fas fa-code w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Builder</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="chatbot">
+                            <i class="fas fa-robot w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Chatbot Builder</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="settings">
+                            <i class="fas fa-cog w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="profile">
+                            <i class="fas fa-user w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center" data-section="about">
+                            <i class="fas fa-info-circle w-5 mr-3 flex-shrink-0"></i>
+                            <span class="truncate">Tentang Pembuat</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                        <span id="user-avatar">U</span>
+                    </div>
+                    <div class="ml-3 min-w-0">
+                        <div class="text-responsive-sm font-medium truncate" id="user-name">User Name</div>
+                        <div class="text-responsive-xs text-gray-400 truncate" id="user-email">user@example.com</div>
+                    </div>
+                </div>
+                <button onclick="logout()" class="w-full mt-3 text-center text-gray-400 hover:text-white text-sm">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header glass border-b border-gray-700 px-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <h2 id="section-title" class="text-responsive-xl font-semibold">Dashboard</h2>
+                    <div class="ml-3 ai-badge">
+                        <i class="fas fa-microchip"></i>
+                        <span>ERNIE Bot</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button class="relative touch-target p-2 text-gray-400 hover:text-white transition rounded-lg" aria-label="Notifications">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="touch-target p-2 text-gray-400 hover:text-white transition rounded-lg" aria-label="Toggle theme">
+                        <i class="fas fa-moon text-xl"></i>
+                    </button>
+                    <button class="btn-primary text-white text-responsive-sm">
+                        Upgrade
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="content-section">
+                    <div class="responsive-grid mb-responsive">
+                        <div class="feature-card glass p-responsive">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 rounded-lg bg-indigo-500/20 text-indigo-400">
+                                    <i class="fas fa-comments text-xl"></i>
+                                </div>
+                                <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+12%</span>
+                            </div>
+                            <div class="text-responsive-2xl font-bold mb-1">24</div>
+                            <div class="text-gray-400 text-responsive-sm">Total Chats</div>
+                        </div>
+                        
+                        <div class="feature-card glass p-responsive">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 rounded-lg bg-green-500/20 text-green-400">
+                                    <i class="fas fa-image text-xl"></i>
+                                </div>
+                                <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+8%</span>
+                            </div>
+                            <div class="text-responsive-2xl font-bold mb-1">142</div>
+                            <div class="text-gray-400 text-responsive-sm">Images Generated</div>
+                        </div>
+                        
+                        <div class="feature-card glass p-responsive">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 rounded-lg bg-yellow-500/20 text-yellow-400">
+                                    <i class="fas fa-code text-xl"></i>
+                                </div>
+                                <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+15%</span>
+                            </div>
+                            <div class="text-responsive-2xl font-bold mb-1">37</div>
+                            <div class="text-gray-400 text-responsive-sm">Code Snippets</div>
+                        </div>
+                        
+                        <div class="feature-card glass p-responsive">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 rounded-lg bg-purple-500/20 text-purple-400">
+                                    <i class="fas fa-robot text-xl"></i>
+                                </div>
+                                <span class="text-responsive-xs text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+5%</span>
+                            </div>
+                            <div class="text-responsive-2xl font-bold mb-1">8</div>
+                            <div class="text-gray-400 text-responsive-sm">Chatbots Created</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-responsive">
+                        <div class="lg:col-span-2 glass p-responsive rounded-xl">
+                            <h3 class="text-responsive-lg font-semibold mb-4">Recent Activity</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
+                                    <div class="p-2 rounded-lg bg-blue-500/20 text-blue-400 mr-3 flex-shrink-0">
+                                        <i class="fas fa-comment-dots"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-medium truncate">New chat with ERNIE Bot</div>
+                                        <div class="text-responsive-sm text-gray-400">2 hours ago</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
+                                </div>
+                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
+                                    <div class="p-2 rounded-lg bg-green-500/20 text-green-400 mr-3 flex-shrink-0">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-medium truncate">Generated image with ERNIE Bot</div>
+                                        <div class="text-responsive-sm text-gray-400">Yesterday</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
+                                </div>
+                                <div class="flex items-start p-3 rounded-lg hover:bg-gray-800/50 transition cursor-pointer">
+                                    <div class="p-2 rounded-lg bg-yellow-500/20 text-yellow-400 mr-3 flex-shrink-0">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-medium truncate">Created React component</div>
+                                        <div class="text-responsive-sm text-gray-400">2 days ago</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-500 flex-shrink-0 ml-2"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass p-responsive rounded-xl">
+                            <h3 class="text-responsive-lg font-semibold mb-4">Quick Actions</h3>
+                            <div class="space-y-3">
+                                <button onclick="quickAction('chat')" class="w-full flex items-center p-3 glass-light hover:bg-gray-800/50 rounded-lg text-left transition">
+                                    <i class="fas fa-plus-circle text-indigo-400 mr-3 flex-shrink-0"></i>
+                                    <span class="truncate">Create New Chat</span>
+                                </button>
+                                <button onclick="quickAction('image')" class="w-full flex items-center p-3 glass-light hover:bg-gray-800/50 rounded-lg text-left transition">
+                                    <i class="fas fa-paint-brush text-indigo-400 mr-3 flex-shrink-0"></i>
+                                    <span class="truncate">Generate Image</span>
+                                </button>
+                                <button onclick="quickAction('video')" class="w-full flex items-center p-3 glass-light hover:bg-gray-800/50 rounded-lg text-left transition">
+                                    <i class="fas fa-video text-indigo-400 mr-3 flex-shrink-0"></i>
+                                    <span class="truncate">Create Video</span>
+                                </button>
+                                <button onclick="quickAction('chatbot')" class="w-full flex items-center p-3 glass-light hover:bg-gray-800/50 rounded-lg text-left transition">
+                                    <i class="fas fa-robot text-indigo-400 mr-3 flex-shrink-0"></i>
+                                    <span class="truncate">Build Chatbot</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Chat Section -->
+                <section id="chat-section" class="content-section hidden">
+                    <div class="chat-container glass">
+                        <div class="p-4 border-b border-gray-700">
+                            <h3 class="font-semibold" id="chat-title">New Chat</h3>
+                        </div>
+                        <div id="chat-messages" class="chat-messages space-y-6">
+                            <div class="flex justify-end">
+                                <div class="chat-bubble user text-white">
+                                    <p>Hello! Can you help me plan a new software project?</p>
+                                    <div class="text-xs text-indigo-200 mt-2 text-right">10:30 AM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="chat-bubble ai">
+                                    <p>Certainly! I'd be happy to help you plan a new software project. Let's break it down into key phases:</p>
+                                    <ol class="list-decimal pl-5 mt-2 space-y-1">
+                                        <li><strong>Requirements Gathering</strong> - Define what the software needs to do</li>
+                                        <li><strong>System Design</strong> - Create architecture and technical specifications</li>
+                                        <li><strong>Development</strong> - Write code and build features</li>
+                                        <li><strong>Testing</strong> - Ensure everything works as expected</li>
+                                        <li><strong>Deployment</strong> - Release the software to users</li>
+                                        <li><strong>Maintenance</strong> - Fix issues and add improvements</li>
+                                    </ol>
+                                    <p class="mt-3">Which phase would you like to focus on first?</p>
+                                    <div class="text-xs text-gray-400 mt-2">10:31 AM</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-area">
+                            <div class="flex items-end space-x-3">
+                                <div class="flex-1 glass-light rounded-xl p-1 flex items-center">
+                                    <input id="chat-input" type="text" placeholder="Type your message..." class="flex-1 bg-transparent border-0 focus:ring-0 px-4 py-3 text-white placeholder-gray-400" onkeypress="handleChatKeypress(event)">
+                                    <button class="touch-target p-3 text-gray-400 hover:text-white transition">
+                                        <i class="fas fa-paperclip"></i>
+                                    </button>
+                                    <button class="touch-target p-3 text-gray-400 hover:text-white transition">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                                <button onclick="sendMessage()" class="btn-primary touch-target p-3">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Playground Section -->
+                <section id="playground-section" class="content-section hidden">
+                    <div class="glass rounded-xl overflow-hidden">
+                        <div class="border-b border-gray-700">
+                            <div class="flex overflow-x-auto">
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm tab-active whitespace-nowrap" onclick="switchTab('text')">
+                                    Text Generation
+                                </button>
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm text-gray-400 hover:text-white whitespace-nowrap" onclick="switchTab('image')">
+                                    Image Generation
+                                </button>
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm text-gray-400 hover:text-white whitespace-nowrap" onclick="switchTab('video')">
+                                    Video Generation
+                                </button>
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm text-gray-400 hover:text-white whitespace-nowrap" onclick="switchTab('audio')">
+                                    Audio Generation
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-responsive">
+                            <!-- Text Generation Tab -->
+                            <div id="text-tab" class="tab-content">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generate Text</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Select AI Model</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>Chat Z AI</option>
+                                                <option>Gemini Pro</option>
+                                                <option>GPT-4 Turbo</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Prompt</label>
+                                            <textarea id="text-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe what you want to generate..."></textarea>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-4 mb-6">
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Creativity</label>
+                                                <input type="range" min="0" max="100" value="70" class="w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Length</label>
+                                                <input type="range" min="100" max="2000" value="500" class="w-full">
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="generateText()" class="w-full btn-primary text-white">
+                                            Generate Text
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Text</h3>
+                                        <div id="text-result" class="h-64 sm:h-80 glass border border-gray-700 rounded-lg overflow-auto p-4">
+                                            <div class="text-gray-500 text-center h-full flex items-center justify-center">
+                                                <div>
+                                                    <i class="fas fa-file-alt text-4xl mb-3"></i>
+                                                    <p>Generated text will appear here</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-end space-x-3">
+                                            <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                <i class="fas fa-copy mr-2"></i> Copy
+                                            </button>
+                                            <button class="btn-primary text-white">
+                                                <i class="fas fa-download mr-2"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Generation Tab -->
+                            <div id="image-tab" class="tab-content hidden">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generate Image</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Image Model</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>Gemini Pro Vision</option>
+                                                <option>DALL-E 3</option>
+                                                <option>Stable Diffusion XL</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Prompt</label>
+                                            <textarea id="image-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe the image you want to create..."></textarea>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-4 mb-6">
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Style</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>Realistic</option>
+                                                    <option>Artistic</option>
+                                                    <option>Cartoon</option>
+                                                    <option>Abstract</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Size</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>1024x1024</option>
+                                                    <option>1792x1024</option>
+                                                    <option>1024x1792</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="generateImage()" class="w-full btn-primary text-white">
+                                            Generate Image
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Image</h3>
+                                        <div id="image-result" class="h-64 sm:h-80 glass border border-gray-700 rounded-lg overflow-auto flex items-center justify-center">
+                                            <div class="text-gray-500 text-center">
+                                                <i class="fas fa-image text-4xl mb-3"></i>
+                                                <p>Generated image will appear here</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-end space-x-3">
+                                            <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                <i class="fas fa-redo mr-2"></i> Regenerate
+                                            </button>
+                                            <button class="btn-primary text-white">
+                                                <i class="fas fa-download mr-2"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Video Generation Tab -->
+                            <div id="video-tab" class="tab-content hidden">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generate Video</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Video Model</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>Gemini Pro</option>
+                                                <option>Pika Labs</option>
+                                                <option>Sora</option>
+                                                <option>Stable Video</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Prompt</label>
+                                            <textarea id="video-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe the video you want to create..."></textarea>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-4 mb-6">
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Duration</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>5 seconds</option>
+                                                    <option>10 seconds</option>
+                                                    <option>16 seconds</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Quality</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>Standard</option>
+                                                    <option>HD</option>
+                                                    <option>4K</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="generateVideo()" class="w-full btn-primary text-white">
+                                            Generate Video
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Video</h3>
+                                        <div id="video-result" class="h-64 sm:h-80 glass border border-gray-700 rounded-lg overflow-auto flex items-center justify-center">
+                                            <div class="text-gray-500 text-center">
+                                                <i class="fas fa-video text-4xl mb-3"></i>
+                                                <p>Generated video will appear here</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-end space-x-3">
+                                            <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                <i class="fas fa-play mr-2"></i> Preview
+                                            </button>
+                                            <button class="btn-primary text-white">
+                                                <i class="fas fa-download mr-2"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Audio Generation Tab -->
+                            <div id="audio-tab" class="tab-content hidden">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generate Audio</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Audio Type</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>Text-to-Speech</option>
+                                                <option>Music Generation</option>
+                                                <option>Sound Effects</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Text or Description</label>
+                                            <textarea id="audio-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Enter text to convert to speech or describe audio..."></textarea>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-4 mb-6">
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Voice</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>Natural Male</option>
+                                                    <option>Natural Female</option>
+                                                    <option>Character Voice</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Format</label>
+                                                <select class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                                    <option>MP3</option>
+                                                    <option>WAV</option>
+                                                    <option>OGG</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="generateAudio()" class="w-full btn-primary text-white">
+                                            Generate Audio
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Audio</h3>
+                                        <div id="audio-result" class="h-64 sm:h-80 glass border border-gray-700 rounded-lg overflow-auto flex items-center justify-center">
+                                            <div class="text-gray-500 text-center">
+                                                <i class="fas fa-music text-4xl mb-3"></i>
+                                                <p>Generated audio will appear here</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-end space-x-3">
+                                            <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                <i class="fas fa-play mr-2"></i> Play
+                                            </button>
+                                            <button class="btn-primary text-white">
+                                                <i class="fas fa-download mr-2"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Builder Section -->
+                <section id="builder-section" class="content-section hidden">
+                    <div class="glass rounded-xl overflow-hidden">
+                        <div class="border-b border-gray-700">
+                            <div class="flex overflow-x-auto">
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm tab-active whitespace-nowrap" onclick="switchBuilderTab('web')">
+                                    Website Builder
+                                </button>
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm text-gray-400 hover:text-white whitespace-nowrap" onclick="switchBuilderTab('app')">
+                                    App Builder
+                                </button>
+                                <button class="px-4 sm:px-6 py-4 font-medium text-sm text-gray-400 hover:text-white whitespace-nowrap" onclick="switchBuilderTab('api')">
+                                    API Generator
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-responsive">
+                            <!-- Website Builder Tab -->
+                            <div id="web-tab" class="builder-tab-content">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Build Your Website</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Framework</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>React</option>
+                                                <option>Vue</option>
+                                                <option>Angular</option>
+                                                <option>HTML/CSS</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Describe Your Website</label>
+                                            <textarea id="web-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe the website you want to build..."></textarea>
+                                        </div>
+                                        
+                                        <div class="mb-6">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Features</label>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Responsive Design</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Contact Form</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Blog Section</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>E-commerce</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>User Authentication</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Admin Panel</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="buildWebsite()" class="w-full btn-primary text-white">
+                                            Generate Website
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Code</h3>
+                                        <div id="web-result" class="h-64 sm:h-80 code-editor overflow-auto">
+                                            <pre class="text-gray-300 text-sm"><code>// Generated code will appear here</code></pre>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-between">
+                                            <div class="flex space-x-3">
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-copy mr-2"></i> Copy
+                                                </button>
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-download mr-2"></i> Download
+                                                </button>
+                                            </div>
+                                            <button class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
+                                                <i class="fas fa-rocket mr-2"></i> Deploy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- App Builder Tab -->
+                            <div id="app-tab" class="builder-tab-content hidden">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Build Your Mobile App</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Platform</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>React Native</option>
+                                                <option>Flutter</option>
+                                                <option>Swift (iOS)</option>
+                                                <option>Kotlin (Android)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Describe Your App</label>
+                                            <textarea id="app-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe the mobile app you want to build..."></textarea>
+                                        </div>
+                                        
+                                        <div class="mb-6">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Features</label>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>User Authentication</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Push Notifications</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Camera Integration</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>GPS Location</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Offline Mode</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>In-App Purchases</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="buildApp()" class="w-full btn-primary text-white">
+                                            Generate App
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated Code</h3>
+                                        <div id="app-result" class="h-64 sm:h-80 code-editor overflow-auto">
+                                            <pre class="text-gray-300 text-sm"><code>// Generated code will appear here</code></pre>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-between">
+                                            <div class="flex space-x-3">
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-copy mr-2"></i> Copy
+                                                </button>
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-download mr-2"></i> Download
+                                                </button>
+                                            </div>
+                                            <button class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
+                                                <i class="fas fa-rocket mr-2"></i> Deploy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- API Generator Tab -->
+                            <div id="api-tab" class="builder-tab-content hidden">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generate API</h3>
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Backend Technology</label>
+                                            <select class="w-full p-3 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white">
+                                                <option>Node.js (Express)</option>
+                                                <option>Python (Django)</option>
+                                                <option>Python (Flask)</option>
+                                                <option>PHP (Laravel)</option>
+                                                <option>Ruby on Rails</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Describe Your API</label>
+                                            <textarea id="api-prompt" class="w-full h-32 p-4 glass border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-transparent text-white placeholder-gray-400" placeholder="Describe the API you want to build..."></textarea>
+                                        </div>
+                                        
+                                        <div class="mb-6">
+                                            <label class="block text-responsive-sm font-medium text-gray-300 mb-2">Features</label>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>RESTful</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>GraphQL</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>JWT Authentication</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Database Integration</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>API Documentation</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                                    <span>Rate Limiting</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <button onclick="buildAPI()" class="w-full btn-primary text-white">
+                                            Generate API
+                                        </button>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-responsive-lg font-semibold mb-4">Generated API Code</h3>
+                                        <div id="api-result" class="h-64 sm:h-80 code-editor overflow-auto">
+                                            <pre class="text-gray-300 text-sm"><code>// Generated code will appear here</code></pre>
+                                        </div>
+                                        
+                                        <div class="mt-4 flex justify-between">
+                                            <div class="flex space-x-3">
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-copy mr-2"></i> Copy
+                                                </button>
+                                                <button class="px-4 py-2 glass border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-800/50 transition">
+                                                    <i class="fas fa-download mr-2"></i> Download
+                                                </button>
+                                            </div>
+                                            <button class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
+                                                <i class="fas fa-rocket mr-2"></i> Deploy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Chatbot Builder Section -->
+                <section id="chatbot-section" class="content-section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 glass p-responsive rounded-xl">
+                            <h3 class="text-responsive-lg font-semibold mb-4">Chatbot Flow Builder</h3>
+                            <div class="h-64 sm:h-96 glass-light border-2 border-dashed border-gray-700 rounded-lg flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-project-diagram text-4xl text-gray-500 mb-3 float-animation"></i>
+                                    <p class="text-gray-400">Drag and drop elements to build your chatbot flow</p>
+                                    <button class="mt-4 px-4 py-2 btn-primary text-white rounded-lg">
+                                        Add Element
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <h4 class="font-medium mb-3">Chatbot Elements</h4>
+                                <div class="flex flex-wrap gap-3">
+                                    <div class="p-3 glass-light rounded-lg cursor-pointer hover-scale">
+                                        <i class="fas fa-comment text-indigo-400 mr-2"></i> Message
+                                    </div>
+                                    <div class="p-3 glass-light rounded-lg cursor-pointer hover-scale">
+                                        <i class="fas fa-question-circle text-indigo-400 mr-2"></i> Question
+                                    </div>
+                                    <div class="p-3 glass-light rounded-lg cursor-pointer hover-scale">
+                                        <i class="fas fa-code-branch text-indigo-400 mr-2"></i> Condition
+                                    </div>
+                                    <div class="p-3 glass-light rounded-lg cursor-pointer hover-scale">
+                                        <i class="fas fa-plug text-indigo-400 mr-2"></i> Integration
+                                    </div>
+                                    <div class="p-3 glass-light rounded-lg cursor-pointer hover-scale">
+                                        <i class="fas fa-robot text-indigo-400 mr-2"></i> AI Response
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass p-responsive rounded-xl">
+                            <h3 class="text-responsive-lg font-semibold mb-4">Chatbot Settings</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-responsive-sm font-medium text-gray-300 mb-1">Chatbot Name</label>
+                                    <input type="text" id="chatbot-name" class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white placeholder-gray-400" placeholder="My Chatbot">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-responsive-sm font-medium text-gray-300 mb-1">Description</label>
+                                    <textarea id="chatbot-description" class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white placeholder-gray-400" rows="3" placeholder="Describe your chatbot..."></textarea>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-responsive-sm font-medium text-gray-300 mb-1">Personality</label>
+                                    <select id="chatbot-personality" class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                        <option>Professional</option>
+                                        <option>Friendly</option>
+                                        <option>Funny</option>
+                                        <option>Formal</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-responsive-sm font-medium text-gray-300 mb-1">Language</label>
+                                    <select id="chatbot-language" class="w-full p-3 glass border border-gray-700 rounded-lg bg-transparent text-white">
+                                        <option>English</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                        <option>Indonesian</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-responsive-sm font-medium text-gray-300 mb-1">Channels</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                            <span>Website Widget</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                            <span>Facebook Messenger</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                            <span>WhatsApp</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="rounded text-indigo-600 mr-2">
+                                            <span>Telegram</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button onclick="buildChatbot()" class="w-full btn-primary text-white">
+                                    Save Chatbot
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- About Section - Pembuat AI -->
+                <section id="about-section" class="content-section hidden">
+                    <div class="glass p-responsive rounded-xl">
+                        <div class="flex flex-col items-center mb-8">
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-6">
+                                <i class="fas fa-user text-white text-4xl"></i>
+                            </div>
+                            <h2 class="text-responsive-3xl font-bold gradient-text mb-2">Muhammad Alif Izhharuddin</h2>
+                            <p class="text-gray-400 text-lg">Pembuat AI Nexus</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h3 class="text-responsive-xl font-semibold mb-4">Informasi Pribadi</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-graduation-cap text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Asal Sekolah</div>
+                                            <div class="text-gray-400">SMA Islam Sabilillah Malang</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-birthday-cake text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Tanggal Lahir</div>
+                                            <div class="text-gray-400">26 Maret 2008</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-map-marker-alt text-indigo-400 mt-1 mr-3 w-5"></i>
+                                        <div>
+                                            <div class="font-medium">Lokasi</div>
+                                            <div class="text-gray-400">Malang, Jawa Timur, Indonesia</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-responsive-xl font-semibold mb-4">Tentang AI Nexus</h3>
+                                <p class="text-gray-300 mb-4">
+                                    AI Nexus adalah platform AI premium yang dikembangkan oleh Muhammad Alif Izhharuddin 
+                                    sebagai bagian dari proyek pengembangan teknologi AI di bidang pendidikan. Platform ini 
+                                    dirancang untuk membantu siswa dan guru dalam memanfaatkan teknologi AI untuk pembelajaran 
+                                    yang lebih efektif dan menarik.
+                                </p>
+                                <p class="text-gray-300">
+                                    Dengan AI Nexus, pengguna dapat mengakses berbagai fitur AI seperti chatbot, pembangkit 
+                                    konten, dan alat bantu pembelajaran lainnya yang dapat meningkatkan kualitas pendidikan 
+                                    di era digital.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-700 pt-6">
+                            <h3 class="text-responsive-xl font-semibold mb-4">Kontak</h3>
+                            <div class="flex flex-wrap gap-4 justify-center">
+                                <a href="#" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
+                                    <i class="fab fa-instagram text-pink-500 mr-2"></i>
+                                    <span>Instagram</span>
+                                </a>
+                                <a href="#" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
+                                    <i class="fab fa-github text-gray-400 mr-2"></i>
+                                    <span>GitHub</span>
+                                </a>
+                                <a href="#" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
+                                    <i class="fab fa-linkedin text-blue-500 mr-2"></i>
+                                    <span>LinkedIn</span>
+                                </a>
+                                <a href="#" class="flex items-center p-3 glass-light rounded-lg hover:bg-gray-800/50 transition">
+                                    <i class="fas fa-envelope text-red-500 mr-2"></i>
+                                    <span>Email</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAC13TY_4XA2ez9djITE3njaQDviijc53o", // <--- PENTING: Ganti di sini!
+        authDomain: "nexusai-d2044.firebaseapp.com",
+        databaseURL: "https://nexusai-d2044-default-rtdb.firebaseio.com",
+        projectId: "nexusai-d2044",
+        storageBucket: "nexusai-d2044.appspot.com",
+        messagingSenderId: "1710408617", // <--- PENTING: Ganti di sini!
+        appId: "1:1710408617:web:a5aef853dca9c2771d3ab8", // <--- PENTING: Ganti di sini!
+        measurementId: "G-7SP841GBR7" // Hapus komentar dan ganti jika Anda menggunakan Google Analytics for Firebase
+    };
+
+    try {
+        firebase.initializeApp(firebaseConfig);
+        console.log("Aplikasi Firebase berhasil diinisialisasi.");
+    } catch (e) {
+        console.log("Aplikasi Firebase sudah diinisialisasi atau mengalami kesalahan:", e);
+    }
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // Konfigurasi API (API_CONFIG Anda yang sudah ada untuk layanan lain)
+    const API_CONFIG = {
+        GEMINI_API_KEY: 'AIzaSyC0nU5kudyQJpdxpSlLGIbwRgZ24jqyvGY',
+        GEMINI_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/',
+        CHAT_Z_AI_API_KEY: 'your-chat-z-ai-api-key', // <--- Ganti placeholder ini
+        CHAT_Z_AI_BASE_URL: 'https://chat.z.ai/api/v1',
+        DIALOGFLOW_API_KEY: 'your-dialogflow-api-key', // <--- Ganti placeholder ini
+        DIALOGFLOW_PROJECT_ID: 'your-dialogflow-project-id', // <--- Ganti placeholder ini
+        DIALOGFLOW_BASE_URL: 'https://dialogflow.googleapis.com/v2/projects/'
+    };
+
+    // Variabel Global (variabel global Anda yang sudah ada)
+    let currentSection = 'dashboard';
+    let currentChat = [];
+    let isGenerating = false;
+    let abortController = null;
+    let currentUser = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check viewport size
+            checkViewportSize();
+            
+            // Initialize event listeners
+            initializeEventListeners();
+            
+            // Check authentication status
+            checkAuthStatus();
+        });
+        
+        // Check authentication status
+        function checkAuthStatus() {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    
+                    // Check if email is verified
+                    if (!user.emailVerified) {
+                        showToast('Please verify your email address.', 'warning');
+                        document.getElementById('verification-notice').classList.remove('hidden');
+                        // Show a button to resend verification email
+                        // You can add this to your UI
+                    }
+                    
+                    // Get user data from Firestore
+                    try {
+                        const doc = await db.collection('users').doc(user.uid).get();
+                        
+                        if (doc.exists) {
+                            // User data exists, show main app
+                            const userData = doc.data();
+                            showMainApp(userData);
+                        } else {
+                            // User data doesn't exist, create it
+                            const userData = {
+                                name: user.displayName || 'User',
+                                email: user.email,
+                                createdAt: new Date().toISOString(),
+                                lastLogin: new Date().toISOString(),
+                                preferences: {
+                                    language: 'id',
+                                    theme: 'dark',
+                                    notifications: {
+                                        email: true,
+                                        push: true
+                                    }
+                                },
+                                stats: {
+                                    chats: 0,
+                                    images: 0,
+                                    codeSnippets: 0,
+                                    chatbots: 0
+                                }
+                            };
+                            
+                            // Create user document
+                            await db.collection('users').doc(user.uid).set(userData);
+                            showMainApp(userData);
+                        }
+                    } catch (error) {
+                        console.error("Error getting user document:", error);
+                        showToast('Error loading user profile', 'error');
+                    }
+                } else {
+                    // User is signed out
+                    currentUser = null;
+                    showAuthPage();
+                }
+            });
+        }
+        
+        // Show authentication page
+        function showAuthPage() {
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+        
+        // Show main app
+        function showMainApp(user) {
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            // Update user info in the UI
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+            
+            // Tampilkan dashboard dengan benar
+            setTimeout(() => {
+                showSection('dashboard');
+            }, 100);
+        }
+        
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Window resize handler
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    checkViewportSize();
+                }, 250);
+            });
+            
+            // Touch events for better mobile experience
+            document.addEventListener('touchstart', function() {}, { passive: true });
+            document.addEventListener('touchmove', function() {}, { passive: true });
+            
+            // Prevent zoom on double tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Sidebar navigation
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    if (sectionId) {
+                        showSection(sectionId, this);
+                    }
+                });
+            });
+        }
+        
+        // Check viewport size and adjust accordingly
+        function checkViewportSize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // Adjust for small screens
+            if (width < 640) {
+                document.body.classList.add('mobile');
+            } else {
+                document.body.classList.remove('mobile');
+            }
+            
+            // Adjust for landscape orientation on mobile
+            if (width > height && width < 1024) {
+                document.body.classList.add('landscape');
+            } else {
+                document.body.classList.remove('landscape');
+            }
+        }
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open on mobile
+            if (window.innerWidth < 768) {
+                if (sidebar.classList.contains('open')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+        
+        // Show section
+        function showSection(sectionId, element) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId + '-section');
+            if (!selectedSection) {
+                console.error(`Section with ID ${sectionId}-section not found`);
+                return;
+            }
+            selectedSection.classList.remove('hidden');
+            
+            // Add fade-in animation
+            selectedSection.classList.add('fade-in');
+            
+            // Update section title
+            const titles = {
+                'dashboard': 'Dashboard',
+                'chat': 'Chat AI',
+                'playground': 'AI Playground',
+                'builder': 'Builder',
+                'chatbot': 'Chatbot Builder',
+                'settings': 'Settings',
+                'profile': 'Profile',
+                'about': 'Tentang Pembuat'
+            };
+            const sectionTitle = document.getElementById('section-title');
+            if (sectionTitle && titles[sectionId]) {
+                sectionTitle.textContent = titles[sectionId];
+            }
+            
+            // Update active sidebar item
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // If no element is provided, find the sidebar item that matches the sectionId
+                const matchingItem = Array.from(sidebarItems).find(item => 
+                    item.getAttribute('data-section') === sectionId
+                );
+                if (matchingItem) {
+                    matchingItem.classList.add('active');
+                }
+            }
+            
+            currentSection = sectionId;
+            
+            // Close mobile menu
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Switch tab for playground
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Update active tab styling
+            const tabButtons = document.querySelectorAll('#playground-section .border-b button');
+            tabButtons.forEach(button => {
+                button.classList.remove('tab-active');
+                button.classList.add('text-gray-400');
+            });
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-gray-400');
+        }
+        
+        // Switch tab for builder
+        function switchBuilderTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.builder-tab-content');
+            tabs.forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Update active tab styling
+            const tabButtons = document.querySelectorAll('#builder-section .border-b button');
+            tabButtons.forEach(button => {
+                button.classList.remove('tab-active');
+                button.classList.add('text-gray-400');
+            });
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-gray-400');
+        }
+        
+        // Quick action from dashboard
+        function quickAction(action) {
+            switch(action) {
+                case 'chat':
+                    showSection('chat');
+                    newChat();
+                    break;
+                case 'image':
+                    showSection('playground');
+                    // Need to wait for section to be visible
+                    setTimeout(() => switchTab('image'), 100);
+                    break;
+                case 'video':
+                    showSection('playground');
+                    setTimeout(() => switchTab('video'), 100);
+                    break;
+                case 'chatbot':
+                    showSection('chatbot');
+                    break;
+            }
+        }
+        
+        // New chat
+        function newChat() {
+            currentChat = [];
+            const messagesContainer = document.getElementById('chat-messages');
+            if (messagesContainer) {
+                messagesContainer.innerHTML = '';
+            }
+            
+            const chatTitle = document.getElementById('chat-title');
+            if (chatTitle) {
+                chatTitle.textContent = 'New Chat';
+            }
+            
+            // Focus on input after a short delay
+            setTimeout(() => {
+                const input = document.getElementById('chat-input');
+                if (input) {
+                    input.focus();
+                    // Scroll to bottom on mobile
+                    if (window.innerWidth < 768) {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }, 100);
+        }
+        
+        // Handle chat keypress
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (messagesContainer) {
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+            }
+        }
+        
+        // Add message to chat
+        function addMessageToChat(role, content) {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${role === 'user' ? 'justify-end' : ''} slide-in`;
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="chat-bubble ${role}">
+                    <p>${content}</p>
+                    <div class="text-xs ${role === 'user' ? 'text-indigo-200' : 'text-gray-400'} mt-2 ${role === 'user' ? 'text-right' : ''}">${time}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            
+            // Save to current chat
+            currentChat.push({ role, content, time });
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex slide-in';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Toast notification
+        function showToast(message, type = 'info') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            // Add to container
+            const container = document.getElementById('toast-container');
+            container.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            // Give it a moment to adjust
+            setTimeout(() => {
+                checkViewportSize();
+                
+                // Adjust chat interface if needed
+                if (currentSection === 'chat') {
+                    scrollToBottom();
+                }
+            }, 100);
+        });
+        
+        // Handle visibility change (when app comes to foreground)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // App is now visible, refresh any data if needed
+                console.log('App is now visible');
+            }
+        });
+        
+        // Add swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            // Swipe right to open sidebar
+            if (diff < -swipeThreshold && window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('open')) {
+                    toggleSidebar();
+                }
+            }
+            
+            // Swipe left to close sidebar
+            if (diff > swipeThreshold && window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('open')) {
+                    toggleSidebar();
+                }
+            }
+        }
+        
+        // Handle login
+        async function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    document.getElementById('auth-loading').classList.remove('hidden');
+    document.getElementById('login-form').style.opacity = '0.5';
+    document.getElementById('login-form').style.pointerEvents = 'none';
+
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        if (!user.emailVerified) {
+            showToast('Email Anda belum diverifikasi. Kami telah mengirim ulang tautan verifikasi ke email Anda. Silakan periksa kotak masuk (dan folder spam) Anda.', 'warning');
+            await user.sendEmailVerification();
+            // Hapus baris `await auth.signOut();` di sini.
+            // Fungsi `onAuthStateChanged` akan menjaga pengguna tetap di halaman autentikasi.
+        } else {
+            await db.collection('users').doc(user.uid).update({ lastLogin: new Date().toISOString() });
+            showToast('Login berhasil!', 'success');
+        }
+    } catch (error) {
+        // ... (kode penanganan error yang sudah ada)
+    } finally {
+        document.getElementById('auth-loading').classList.add('hidden');
+        document.getElementById('login-form').style.opacity = '1';
+        document.getElementById('login-form').style.pointerEvents = 'auto';
+    }
+}
+
+            
+            // Show loading indicator
+            document.getElementById('auth-loading').classList.remove('hidden');
+            document.getElementById('login-form').style.opacity = '0.5';
+            document.getElementById('login-form').style.pointerEvents = 'none';
+            
+            try {
+                // Sign in user with email and password
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Check if email is verified
+                if (!user.emailVerified) {
+                    showToast('Please verify your email before logging in.', 'error');
+                    
+                    // Send verification email again
+                    await user.sendEmailVerification();
+                    showToast('Verification email sent again.', 'info');
+                    
+                    // Sign out the user
+                    await auth.signOut();
+                    return;
+                }
+                
+                // Update last login time
+                await db.collection('users').doc(user.uid).update({
+                    lastLogin: new Date().toISOString()
+                });
+                
+                showToast('Login successful!', 'success');
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                let errorMessage = 'Login failed. Please try again.';
+                
+                // Handle specific Firebase auth errors
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Incorrect password.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This account has been disabled.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many failed login attempts. Please try again later.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your internet connection.';
+                        break;
+                    default:
+                        errorMessage = `Login failed: ${error.message}`;
+                }
+
+                
+                
+                showToast(errorMessage, 'error');
+            } finally {
+                // Hide loading indicator
+            try {
+                document.getElementById('auth-loading').classList.add('hidden');
+                document.getElementById('login-form').style.opacity = '1';
+                document.getElementById('login-form').style.pointerEvents = 'auto';
+            }
+        }
+        
+        // Handle register
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const agreeTerms = document.getElementById('agree-terms').checked;
+            
+            // Validasi input
+            if (!name || !email || !password || !confirmPassword) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            if (!agreeTerms) {
+                showToast('Please agree to the terms and conditions', 'error');
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('auth-loading').classList.remove('hidden');
+            document.getElementById('register-form').style.opacity = '0.5';
+            document.getElementById('register-form').style.pointerEvents = 'none';
+            
+            try {
+                // Create user with email and password
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Update user profile
+                await user.updateProfile({
+                    displayName: name
+                });
+                
+                // Create user document in Firestore
+                const userData = {
+                    name: name,
+                    email: email,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    preferences: {
+                        language: 'id',
+                        theme: 'dark',
+                        notifications: {
+                            email: true,
+                            push: true
+                        }
+                    },
+                    stats: {
+                        chats: 0,
+                        images: 0,
+                        codeSnippets: 0,
+                        chatbots: 0
+                    }
+                };
+                
+                // Save user data to Firestore
+                await db.collection('users').doc(user.uid).set(userData);
+                
+                // Send verification email
+                await user.sendEmailVerification();
+                
+                showToast('Registration successful! Please check your email for verification.', 'success');
+                
+                // Reset form
+                document.getElementById('register-form-element').reset();
+                
+                // Switch to login form
+                setTimeout(() => {
+                    showLogin();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                let errorMessage = 'Registration failed. Please try again.';
+                
+                // Handle specific Firebase auth errors
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'An account with this email already exists.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Email/password accounts are not enabled.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password is too weak. Please use a stronger password.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your internet connection.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many requests. Please try again later.';
+                        break;
+                    default:
+                        errorMessage = `Registration failed: ${error.message}`;
+                }
+                
+                showToast(errorMessage, 'error');
+            } finally {
+                // Hide loading indicator
+                document.getElementById('auth-loading').classList.add('hidden');
+                document.getElementById('register-form').style.opacity = '1';
+                document.getElementById('register-form').style.pointerEvents = 'auto';
+            }
+        }
+        
+        // Handle reset password
+        async function handleResetPassword(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('reset-email').value;
+            
+            // Show loading indicator
+            document.getElementById('auth-loading').classList.remove('hidden');
+            document.getElementById('reset-password-form').style.opacity = '0.5';
+            document.getElementById('reset-password-form').style.pointerEvents = 'none';
+            
+            try {
+                // Send password reset email
+                await auth.sendPasswordResetEmail(email);
+                
+                showToast('Password reset link sent to your email', 'success');
+                showLogin();
+            } catch (error) {
+                console.error('Reset password error:', error);
+                
+                let errorMessage = 'Failed to reset password. Please try again.';
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address.';
+                }
+                
+                showToast(errorMessage, 'error');
+            } finally {
+                // Hide loading indicator
+                document.getElementById('auth-loading').classList.add('hidden');
+                document.getElementById('reset-password-form').style.opacity = '1';
+                document.getElementById('reset-password-form').style.pointerEvents = 'auto';
+            }
+        }
+        
+        // Logout
+        async function logout() {
+            try {
+                await auth.signOut();
+                showToast('You have been logged out', 'info');
+            } catch (error) {
+                console.error('Logout error:', error);
+                showToast('Logout failed. Please try again.', 'error');
+            }
+        }
+        
+        // Show login form
+        function showLogin() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('reset-password-form').classList.add('hidden');
+            document.getElementById('verification-notice').classList.add('hidden');
+        }
+        
+        // Show register form
+        function showRegister() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('reset-password-form').classList.add('hidden');
+            document.getElementById('verification-notice').classList.add('hidden');
+        }
+        
+        // Show reset password form
+        function showResetPassword() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('reset-password-form').classList.remove('hidden');
+            document.getElementById('verification-notice').classList.add('hidden');
+        }
+        
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            // Toggle icon
+            const button = input.nextElementSibling;
+            const icon = button.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+        
+        // Check password strength
+        function checkPasswordStrength() {
+            const password = document.getElementById('register-password').value;
+            const strengthBar = document.getElementById('password-strength');
+            
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            
+            // Complexity checks
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            // Update strength bar
+            strengthBar.className = 'password-strength';
+            if (strength <= 2) {
+                strengthBar.classList.add('weak');
+            } else if (strength === 3) {
+                strengthBar.classList.add('medium');
+            } else {
+                strengthBar.classList.add('strong');
+            }
+        }
+        
+        // Resend verification email
+        async function resendVerificationEmail() {
+            if (!currentUser) {
+                showToast('No user logged in', 'error');
+                return;
+            }
+            
+            try {
+                await currentUser.sendEmailVerification();
+                showToast('Verification email sent again.', 'success');
+            } catch (error) {
+                console.error('Error sending verification email:', error);
+                showToast('Failed to send verification email.', 'error');
+            }
+        }
+        
+        // Send message to AI using chat.z.ai
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message || isGenerating) return;
+            
+            // Cancel any ongoing request
+            if (abortController) {
+                abortController.abort();
+            }
+            
+            // Create new AbortController for this request
+            abortController = new AbortController();
+            
+            // Add user message to chat
+            addMessageToChat('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Scroll to bottom
+            scrollToBottom();
+            
+            try {
+                // Call chat.z.ai API
+                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        model: 'gpt-4', // atau model lain yang didukung
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    }),
+                    signal: abortController.signal
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Read the response
+                const data = await response.json();
+                const aiResponse = data.response || data.message || 'No response from AI';
+                
+                // Add AI response to chat
+                addMessageToChat('ai', aiResponse);
+                
+                // Scroll to bottom
+                scrollToBottom();
+                
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Request was aborted');
+                } else {
+                    removeTypingIndicator();
+                    addMessageToChat('ai', 'Sorry, I encountered an error. Please try again.');
+                    scrollToBottom();
+                    console.error('Error:', error);
+                }
+            } finally {
+                isGenerating = false;
+                abortController = null;
+            }
+        }
+        
+        // Generate text using chat.z.ai
+        async function generateText() {
+            const prompt = document.getElementById('text-prompt').value;
+            const resultDiv = document.getElementById('text-result');
+            
+            if (!prompt) {
+                showToast('Please enter a prompt', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use chat.z.ai API
+                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        message: prompt,
+                        model: 'gpt-4',
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const result = data.response || data.result || 'No text generated';
+                
+                resultDiv.innerHTML = `<div class="prose prose-invert max-w-none">${result}</div>`;
+                showToast('Text generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating text. Please try again.</div>';
+                showToast('Error generating text', 'error');
+                console.error('Text generation error:', error);
+            }
+        }
+        
+        // Generate image using Gemini Pro
+        async function generateImage() {
+            const prompt = document.getElementById('image-prompt').value;
+            const resultDiv = document.getElementById('image-result');
+            
+            if (!prompt) {
+                showToast('Please enter a prompt', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use Gemini Pro to generate image
+                const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}gemini-pro-vision:generateContent?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Generate an image based on this description: ${prompt}`
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.4,
+                            topK: 32,
+                            topP: 1,
+                            maxOutputTokens: 2048,
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Extract image from response
+                let imageUrl = '';
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                    const parts = data.candidates[0].content.parts;
+                    for (const part of parts) {
+                        if (part.inlineData && part.inlineData.mimeType.startsWith('image/')) {
+                            imageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!imageUrl) {
+                    // Fallback to placeholder if no image is generated
+                    imageUrl = `https://picsum.photos/seed/${encodeURIComponent(prompt)}/1024/1024.jpg`;
+                }
+                
+                resultDiv.innerHTML = `<img src="${imageUrl}" alt="Generated image" class="max-w-full h-auto mx-auto rounded-lg">`;
+                showToast('Image generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating image. Please try again.</div>';
+                showToast('Error generating image', 'error');
+                console.error('Image generation error:', error);
+            }
+        }
+        
+        // Generate video using Gemini Pro
+        async function generateVideo() {
+            const prompt = document.getElementById('video-prompt').value;
+            const resultDiv = document.getElementById('video-result');
+            
+            if (!prompt) {
+                showToast('Please enter a prompt', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use Gemini Pro to generate video description
+                const response = await fetch(`${API_CONFIG.GEMINI_BASE_URL}gemini-pro:generateContent?key=${API_CONFIG.GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Generate a detailed description for a video based on this prompt: ${prompt}. Include scene descriptions, transitions, and visual elements.`
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            topK: 40,
+                            topP: 0.95,
+                            maxOutputTokens: 2048,
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Extract video description
+                let videoDescription = '';
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                    const parts = data.candidates[0].content.parts;
+                    for (const part of parts) {
+                        if (part.text) {
+                            videoDescription += part.text;
+                        }
+                    }
+                }
+                
+                // For now, we'll simulate video generation with a placeholder
+                // In a real implementation, you would use a video generation API
+                const videoUrl = `https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4`;
+                
+                resultDiv.innerHTML = `
+                    <div class="text-center">
+                        <video controls class="max-w-full h-auto mx-auto rounded-lg">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="mt-4 p-4 glass-light rounded-lg text-left">
+                            <h4 class="font-medium mb-2">Generated Video Description:</h4>
+                            <p class="text-gray-300">${videoDescription}</p>
+                        </div>
+                    </div>
+                `;
+                showToast('Video generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating video. Please try again.</div>';
+                showToast('Error generating video', 'error');
+                console.error('Video generation error:', error);
+            }
+        }
+        
+        // Generate audio (placeholder)
+        async function generateAudio() {
+            const prompt = document.getElementById('audio-prompt').value;
+            const resultDiv = document.getElementById('audio-result');
+            
+            if (!prompt) {
+                showToast('Please enter a prompt', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            // Simulate audio generation
+            setTimeout(() => {
+                resultDiv.innerHTML = `
+                    <div class="text-center">
+                        <audio controls class="mx-auto">
+                            <source src="https://sample-videos.com/zip/10/mp3/SampleAudio_0.4mb.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <p class="mt-3 text-gray-400">Generated audio placeholder</p>
+                    </div>
+                `;
+                showToast('Audio generated successfully', 'success');
+            }, 2000);
+        }
+        
+        // Build website using chat.z.ai
+        async function buildWebsite() {
+            const prompt = document.getElementById('web-prompt').value;
+            const framework = document.querySelector('#web-tab select').value;
+            const resultDiv = document.getElementById('web-result');
+            
+            if (!prompt) {
+                showToast('Please describe your website', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use chat.z.ai builder API
+                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        type: 'website',
+                        prompt: prompt,
+                        framework: framework,
+                        features: getSelectedFeatures('web')
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const result = data.code || data.result || 'No code generated';
+                
+                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+                showToast('Website code generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+                showToast('Error generating code', 'error');
+                console.error('Website generation error:', error);
+            }
+        }
+        
+        // Build app using chat.z.ai
+        async function buildApp() {
+            const prompt = document.getElementById('app-prompt').value;
+            const platform = document.querySelector('#app-tab select').value;
+            const resultDiv = document.getElementById('app-result');
+            
+            if (!prompt) {
+                showToast('Please describe your app', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use chat.z.ai builder API
+                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        type: 'app',
+                        prompt: prompt,
+                        platform: platform,
+                        features: getSelectedFeatures('app')
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const result = data.code || data.result || 'No code generated';
+                
+                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+                showToast('App code generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+                showToast('Error generating code', 'error');
+                console.error('App generation error:', error);
+            }
+        }
+        
+        // Build API using chat.z.ai
+        async function buildAPI() {
+            const prompt = document.getElementById('api-prompt').value;
+            const technology = document.querySelector('#api-tab select').value;
+            const resultDiv = document.getElementById('api-result');
+            
+            if (!prompt) {
+                showToast('Please describe your API', 'error');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+            
+            try {
+                // Use chat.z.ai builder API
+                const response = await fetch(`${API_CONFIG.CHAT_Z_AI_BASE_URL}/builder`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.CHAT_Z_AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        type: 'api',
+                        prompt: prompt,
+                        technology: technology,
+                        features: getSelectedFeatures('api')
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const result = data.code || data.result || 'No code generated';
+                
+                resultDiv.innerHTML = `<pre class="text-gray-300 text-sm"><code>${result}</code></pre>`;
+                showToast('API code generated successfully', 'success');
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-400">Error generating code. Please try again.</div>';
+                showToast('Error generating code', 'error');
+                console.error('API generation error:', error);
+            }
+        }
+        
+        // Build chatbot using Dialogflow
+        async function buildChatbot() {
+            const name = document.getElementById('chatbot-name').value;
+            const description = document.getElementById('chatbot-description').value;
+            const personality = document.getElementById('chatbot-personality').value;
+            const language = document.getElementById('chatbot-language').value;
+            const channels = getSelectedChannels();
+            
+            if (!name || !description) {
+                showToast('Please fill in the required fields', 'error');
+                return;
+            }
+            
+            // Show loading indicator
+            const saveButton = document.querySelector('#chatbot-section button');
+            const originalText = saveButton.textContent;
+            saveButton.textContent = 'Creating...';
+            saveButton.disabled = true;
+            
+            try {
+                // Create chatbot using Dialogflow API
+                const response = await fetch(`${API_CONFIG.DIALOGFLOW_BASE_URL}${API_CONFIG.DIALOGFLOW_PROJECT_ID}/agent`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.DIALOGFLOW_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        displayName: name,
+                        description: description,
+                        defaultLanguageCode: language,
+                        supportedLanguageCodes: [language],
+                        timeZone: 'Asia/Jakarta'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Create intent for the chatbot
+                const intentResponse = await fetch(`${API_CONFIG.DIALOGFLOW_BASE_URL}${API_CONFIG.DIALOGFLOW_PROJECT_ID}/intents`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.DIALOGFLOW_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        displayName: 'Default Welcome Intent',
+                        priority: 500000,
+                        webhookState: 'WEBHOOK_STATE_ENABLED',
+                        trainingPhrases: [
+                            {
+                                type: 'EXAMPLE',
+                                parts: [
+                                    {
+                                        text: 'Hello'
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'EXAMPLE',
+                                parts: [
+                                    {
+                                        text: 'Hi'
+                                    }
+                                ]
+                            }
+                        ],
+                        messages: [
+                            {
+                                text: {
+                                    text: [
+                                        `Hello! I'm ${name}. ${description}`
+                                    ]
+                                }
+                            }
+                        ]
+                    })
+                });
+                
+                if (!intentResponse.ok) {
+                    throw new Error(`HTTP error! status: ${intentResponse.status}`);
+                }
+                
+                const intentData = await intentResponse.json();
+                
+                showToast('Chatbot created successfully', 'success');
+                
+            } catch (error) {
+                showToast('Error creating chatbot. Please try again.', 'error');
+                console.error('Chatbot creation error:', error);
+            } finally {
+                // Reset button
+                saveButton.textContent = originalText;
+                saveButton.disabled = false;
+            }
+        }
+        
+        // Helper function to get selected features
+        function getSelectedFeatures(type) {
+            const features = [];
+            const checkboxes = document.querySelectorAll(`#${type}-tab input[type="checkbox"]:checked`);
+            
+            checkboxes.forEach(checkbox => {
+                features.push(checkbox.nextElementSibling.textContent.trim());
+            });
+            
+            return features;
+        }
+        
+        // Helper function to get selected channels
+        function getSelectedChannels() {
+            const channels = [];
+            const checkboxes = document.querySelectorAll('#chatbot-section input[type="checkbox"]:checked');
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.closest('#chatbot-section')) {
+                    channels.push(checkbox.nextElementSibling.textContent.trim());
+                }
+            });
+            
+            return channels;
+        }
+    </script>
+</body>
+</html>
